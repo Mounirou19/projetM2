@@ -1,0 +1,98 @@
+services:
+  # Service web pour Symfony (PHP)
+  web:
+    image: php:8.2-fpm  # Utilise l'image PHP 8.2 avec FPM
+    build:
+      context: .  # Contexte de construction du Dockerfile
+      dockerfile: Dockerfile  # Nom du Dockerfile
+    container_name: projetM2_web  # Nom du conteneur
+    working_dir: /var/www/html  # Répertoire de travail dans le conteneur
+    volumes:
+      - ./:/var/www/html:delegated  # Monte le répertoire courant dans le conteneur avec l'option "delegated"
+    networks:
+      - symfony-network  # Connecte le conteneur au réseau "symfony-network"
+    environment:
+      - PHP_INI_SCAN_DIR=/usr/local/etc/php/conf.d  # Répertoire de configuration PHP
+      - APP_ENV=dev  # Environnement de développement dataventure#10bescudier
+      - .env  # Fichier d'environnement
+      - COMPOSER_ALLOW_SUPERUSER=1  # Autorise Composer à s'exécuter en tant que superutilisateur
+    depends_on:
+      - database  # Dépend du service "database" 
+
+  # Service React
+  react:
+    build:
+      context: ./view  # Contexte de construction du Dockerfile
+      dockerfile: Dockerfile  # Nom du Dockerfile
+    container_name: react_app_projetM2  # Nom du conteneur
+    hostname: film-serie-manga.fr.local  # Nom d'hôte personnalisé
+    volumes:
+      - ./view:/usr/src/app:delegated  # Monte le répertoire "view" dans le conteneur avec l'option "delegated"
+      - /usr/src/app/node_modules  # Préserve le répertoire "node_modules"
+    ports:
+      - "3000:3000"  # Mappe le port 3000 du conteneur au port 3000 de l'hôte
+    networks:
+      - symfony-network  # Connecte le conteneur au réseau "symfony-network"
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Active le hot-reloading pour Docker
+      - REACT_APP_TOKEN=d@t@ventureprojetM2123$  # Token pour l'application React
+      - REACT_APP_API_URL=http://localhost:8083  # URL de l'API
+      - REACT_APP_ROLE_USER=R0L3_US3R  # Rôle utilisateur
+      - REACT_APP_ROLE_ADMIN=R0L3_@DM1N  # Rôle administrateur
+
+  # Service phpMyAdmin avec plateforme spécifiée
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin  # Utilise l'image phpMyAdmin
+    container_name: projetM2_phpmyadmin  # Nom du conteneur
+    platform: linux/amd64  # Spécifie la plateforme
+    environment:
+      PMA_HOST: database  # Hôte de la base de données
+      PMA_USER: mounir  # Utilisateur de la base de données
+      PMA_PASSWORD: moumou  # Mot de passe de la base de données
+    ports:
+      - "8081:80"  # Mappe le port 80 du conteneur au port 8081 de l'hôte
+    networks:
+      - symfony-network  # Connecte le conteneur au réseau "symfony-network"
+
+  # Service NGINX
+  nginx:
+    image: nginx:alpine  # Utilise l'image NGINX Alpine
+    container_name: nginx_server_projetM2  # Nom du conteneur
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf  # Monte le fichier de configuration NGINX
+    ports:
+      - "8083:80"  # Mappe le port 80 du conteneur au port 8083 de l'hôte
+    depends_on:
+      - web  # Dépend du service "web"
+    networks:
+      - symfony-network  # Connecte le conteneur au réseau "symfony-network"
+
+  # Service MySQL pour la base de données
+  database:
+    image: mysql:8.0  # Utilise l'image MySQL 8.0
+    restart: always  # Redémarre toujours le conteneur en cas d'échec
+    container_name: mysql_db_projetM2  # Nom du conteneur
+    environment:
+      MYSQL_DATABASE: projetM2  # Nom de la base de données
+      MYSQL_ROOT_PASSWORD: root  # Mot de passe root
+      MYSQL_USER: mounir  # Utilisateur de la base de données
+      MYSQL_PASSWORD: moumou  # Mot de passe de l'utilisateur
+    ports:
+      - "3306:3306"  # Mappe le port 3306 du conteneur au port 3306 de l'hôte
+    volumes:
+      - database_data:/var/lib/mysql  # Monte le volume de données de la base de données
+    networks:
+      - symfony-network  # Connecte le conteneur au réseau "symfony-network"
+    command: --log-bin-trust-function-creators=1  # Commande pour MySQL
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]  # Vérifie la santé du conteneur
+      timeout: 5s  # Délai d'attente pour le test de santé
+      retries: 5  # Nombre de tentatives pour le test de santé
+      start_period: 30s  # Période de démarrage avant le début des tests de santé
+
+networks:
+  symfony-network:
+    driver: bridge  # Utilise le pilote de réseau "bridge"
+
+volumes:
+  database_data:  # Volume pour les données de la base de données
