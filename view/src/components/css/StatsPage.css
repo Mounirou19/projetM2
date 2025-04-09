@@ -1,0 +1,51 @@
+/* Conteneur principal pour la page des statistiques */
+.stats-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Titre principal */
+  .stats-page h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Style du graphique en barre */
+  .chart-container {
+    position: relative;
+    margin: 0 auto;
+    height: 400px; /* Hauteur fixe pour le graphique */
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  /* Ajustement des styles pour les petits écrans */
+  @media (max-width: 768px) {
+    .stats-page {
+      padding: 15px;
+    }
+  
+    .stats-page h1 {
+      font-size: 24px;
+    }
+  
+    .chart-container {
+      height: 300px; /* Réduction de la hauteur pour les écrans plus petits */
+    }
+  }
+  

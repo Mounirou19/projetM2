@@ -1,0 +1,138 @@
+/* Home.css ou votre fichier CSS global */
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+
+.home-container {
+    padding: 20px;
+  }
+  
+  .welcome-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-section h1 {
+    font-size: 36px;
+  }
+  
+  .welcome-section p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .explore-button {
+    margin-top: 50px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .explore-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .categories-section {
+    margin: 40px 0;
+  }
+  
+  .categories-section h2,
+  .recommendations-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .categories {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+  }
+  
+  .category {
+    flex: 1;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin: 10px;
+  }
+  
+  .category h3 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .category p {
+    color: #555;
+    font-size: 16px;
+  }
+  
+  .recommendations-section {
+    margin: 40px 0;
+  }
+  
+  .recommendations {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .recommendation {
+    width: 150px;
+    text-align: center;
+    margin: 10px;
+  }
+  
+  .recommendation img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .recommendation p {
+    color: #555;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  /* Limite la taille des images dans le slider */
+.slider-image {
+  width: 150px; /* ajustez la largeur selon vos besoins */
+  height: 200px; /* ajustez la hauteur selon vos besoins */
+  object-fit: cover; /* ajuste l'image pour qu'elle occupe toute la zone */
+  border-radius: 8px; /* arrondi des coins, facultatif */
+  margin: auto; /* centre l'image dans chaque slide */
+}
+
+@media (max-width: 768px) {
+  .welcome-section h1 {
+    font-size: 24px;
+  }
+
+  .categories {
+    flex-direction: column;
+  }
+
+  .category {
+    margin: 10px 0;
+  }
+  .recommendations {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: column;
+  }
+  .recommendation {
+    width: 90%;
+    text-align: center;
+    margin: 10px;
+  }
+}

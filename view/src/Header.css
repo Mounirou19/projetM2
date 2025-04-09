@@ -1,0 +1,103 @@
+/* Styles du header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+}
+
+.logo {
+  font-size: 24px;
+  color: #fff;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Menu burger */
+.burger-menu {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.burger-menu div {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 4px 0;
+  transition: 0.4s;
+}
+
+.header-background {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+
+}
+.header-background:hover {
+  cursor: pointer;
+}
+
+.header-background img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* Styles pour le menu burger en version mobile */
+@media (max-width: 768px) {
+  /* Cacher la navigation principale sur mobile */
+  .nav {
+    display: none;
+  }
+
+  /* Afficher le burger menu */
+  .burger-menu {
+    display: flex;
+  }
+
+  /* Menu déroulant quand le burger est cliqué */
+  .nav.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    z-index: 1;
+    padding: 10px 0;
+  }
+
+  .nav-link {
+    padding: 10px 20px;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .header-background h1{
+    display: none;
+  }
+
+  .header-background img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+}
