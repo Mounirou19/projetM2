@@ -60,7 +60,7 @@ DELIMITER ;
 
 Le projet est dockerisé et le fichier compose.yaml est déjà fourni. Il ne vous reste plus qu'à être à la racine du projet depuis votre terminal et à lancer la commande : 
 
-docker-compose up -d (docker-compose up --build si vous voulez voir les différents containers se mettrent en place étape par étape)
+docker-compose up --build
 
 Si vous vous y connaissait en docker je vous laisse le soin de changer les différents mot de passes mis dans le compose.yaml pour la base de données sinon laisser comme tel vous n'aurez pas besoin de vous connectez pour accéder à phpmyadmin 
 
