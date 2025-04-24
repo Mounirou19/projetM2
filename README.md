@@ -66,8 +66,9 @@ Si vous vous y connaissait en docker je vous laisse le soin de changer les diff�
 
 ## Lien du projet
 
-d'abord on va modifier le fichier /etc/hosts en ajoutant cette ligne:
+d'abord on va modifier le fichier /etc/hosts sur mac en ajoutant cette ligne:
 127.0.0.1 film-serie-manga.fr.local
+sinon aller directement sur le lien : http://localhost:3000/
 
 Ensuite lorsque le projet est dockerisé et la ligne ajoutée sur le fichier /etc/hosts vous pourrez accéder au site web en tapant ce lien sur la barre de recherche : http://film-serie-manga.fr.local:3000/
 
