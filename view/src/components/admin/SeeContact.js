@@ -16,7 +16,7 @@ function SeeContact() {
   const fetchContact = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/contact/${id}?infos=${infos}`, {
-        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
+        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.ADMIN_ACCESS_TOKEN}` },
       });
       
       if (!response.ok) {

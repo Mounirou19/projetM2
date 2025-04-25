@@ -39,6 +39,7 @@ services:
       - REACT_APP_API_URL=http://localhost:8083  # URL de l'API
       - REACT_APP_ROLE_USER=R0L3_US3R  # Rôle utilisateur
       - REACT_APP_ROLE_ADMIN=R0L3_@DM1N  # Rôle administrateur
+      - ADMIN_ACCESS_TOKEN=35!3J*V5p$5Qf3y6EjzbUG&
 
   # Service phpMyAdmin avec plateforme spécifiée
   phpmyadmin:

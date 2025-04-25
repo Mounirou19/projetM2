@@ -45,7 +45,7 @@ const EditMedia = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/update/${id}?infos=${infos}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
+        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.ADMIN_ACCESS_TOKEN}` },
         body: JSON.stringify(formData),
       });
 
