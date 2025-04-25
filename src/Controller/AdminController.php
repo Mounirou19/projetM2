@@ -16,6 +16,12 @@ class AdminController extends AbstractController
 {
     private $entityManager;
 
+    private function isAuthorized(Request $request): bool
+    {
+        $token = $request->headers->get('X-ADMIN-TOKEN');
+        return $token === $_ENV['ADMIN_ACCESS_TOKEN'];
+    }
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -33,6 +39,10 @@ class AdminController extends AbstractController
     #[Route('/admin/board', name: 'app_board')]
     public function dashboard(Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -110,6 +120,10 @@ class AdminController extends AbstractController
     #[Route ('/admin/medias', name: 'app_admin_medias_get')]
     public function getMedias(Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -141,6 +155,10 @@ class AdminController extends AbstractController
     #[Route('/admin/user/create', name: 'app_create_user', methods: ['POST'])]
     public function createUser(Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -169,6 +187,10 @@ class AdminController extends AbstractController
     #[Route('/admin/media/create', name: 'app_create_media', methods: ['POST'])]
     public function createMedia(Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -203,6 +225,10 @@ class AdminController extends AbstractController
     #[Route('/admin/user/{id}', name: 'app_get_user', methods: ['GET'])]
     public function getUserr($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -233,6 +259,10 @@ class AdminController extends AbstractController
     #[Route('/admin/media/{id}', name: 'app_get_media', methods: ['GET'])]
     public function getMedia($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -264,6 +294,10 @@ class AdminController extends AbstractController
     #[Route('/admin/user/delete/{id}', name: 'app_delete_user', methods: ['PUT'])]
     public function deleteUser($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -293,6 +327,10 @@ class AdminController extends AbstractController
     #[Route('/admin/user/deletever/{id}', name: 'app_deletever_user', methods: ['DELETE'])]
     public function deleteUseForEver($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -317,6 +355,10 @@ class AdminController extends AbstractController
     #[Route('/admin/user/reactivate/{id}', name: 'app_reactivate_user', methods: ['PUT'])]
     public function reactivateUser($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -343,6 +385,10 @@ class AdminController extends AbstractController
     #[Route('/admin/media/delete/{id}', name: 'app_delete_media', methods: ['PUT'])]
     public function deleteMedia($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -372,6 +418,10 @@ class AdminController extends AbstractController
     #[Route('/admin/media/reactivate/{id}', name: 'app_reactivate_media', methods: ['PUT'])]
     public function reactivateMedia($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -398,6 +448,10 @@ class AdminController extends AbstractController
     #[Route('/admin/user/update/{id}', name: 'app_update_user', methods: ['PUT'])]
     public function updateUser($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -429,6 +483,10 @@ class AdminController extends AbstractController
     #[Route('/admin/media/update/{id}', name: 'app_update_media', methods: ['PUT'])]
     public function updateMedia($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -460,6 +518,10 @@ class AdminController extends AbstractController
     #[Route('/admin/contact/{id}', name: 'app_get_contact', methods: ['GET'])]
     public function getContact($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -491,6 +553,10 @@ class AdminController extends AbstractController
     #[Route('/admin/contact/lu/{id}', name: 'app_contact_lu', methods: ['PUT'])]
     public function contactLu($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 
@@ -517,6 +583,10 @@ class AdminController extends AbstractController
     #[Route('/admin/contact/delete/{id}', name: 'app_delete_contact', methods: ['DELETE'])]
     public function deleteContact($id, Request $request): JsonResponse
     {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
         $data = $request->query->get('infos');
         $d = explode(',', $data);
 

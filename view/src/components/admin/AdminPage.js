@@ -17,7 +17,7 @@ function AdminPage() {
 
     const fetchData = async () => {
       const Response = await fetch(`${process.env.REACT_APP_API_URL}/admin/board?infos=${infos}`, {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
       });
 
       if (!Response.ok) {
@@ -42,7 +42,7 @@ function AdminPage() {
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/delete/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
     
         if (!response.ok) {
@@ -57,7 +57,7 @@ function AdminPage() {
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/deletever/${id}?infos=${infos}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
     
         if (!response.ok) {
@@ -71,7 +71,7 @@ function AdminPage() {
     const handleReactiveUser = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/reactivate/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
 
         if (!response.ok) {
@@ -90,7 +90,7 @@ function AdminPage() {
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/delete/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
 
         if (!response.ok) {
@@ -104,7 +104,7 @@ function AdminPage() {
     const handleReactiveMedia = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/reactivate/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
 
         if (!response.ok) {
@@ -118,7 +118,7 @@ function AdminPage() {
     const handleLuContact = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/contact/lu/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
 
         if (!response.ok) {
@@ -132,7 +132,7 @@ function AdminPage() {
     const handleDeleteContact = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/contact/delete/${id}?infos=${infos}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         });
 
         if (!response.ok) {

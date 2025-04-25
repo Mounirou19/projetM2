@@ -45,7 +45,7 @@ const EditUser = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/update/${id}?infos=${infos}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': '35!3J*V5p$5Qf3y6EjzbU£G&' },
         body: JSON.stringify(formData),
       });
 
