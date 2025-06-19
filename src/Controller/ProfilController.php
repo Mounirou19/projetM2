@@ -37,7 +37,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -58,7 +58,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -86,7 +86,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -128,7 +128,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -152,7 +152,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -180,7 +180,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -206,7 +206,7 @@ class ProfilController extends AbstractController
 
         if (!isset($d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_US3R' == $d[0])) {
+        } else if (!('ROLE_USER' == $d[0])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -239,7 +239,7 @@ class ProfilController extends AbstractController
 
     //     if (!isset($d[0])) {
     //         return new JsonResponse(['error' => 'Accès interdit'], 403);
-    //     } else if (!('R0L3_US3R' == $d[0]) || !('R0L3_@DM1N' == $d[0]) ) {
+    //     } else if (!('ROLE_USER' == $d[0]) || !('R0L3_@DM1N' == $d[0]) ) {
     //         return new JsonResponse(['error' => 'Accès interdit'], 403);
     //     }
 

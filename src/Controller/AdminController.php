@@ -48,7 +48,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -129,7 +129,7 @@ class AdminController extends AbstractController
 
         if (!isset($d[0]) || !isset($d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        } else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -164,7 +164,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -196,7 +196,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -234,7 +234,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -268,7 +268,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -303,7 +303,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -336,7 +336,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -364,7 +364,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -394,7 +394,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -427,7 +427,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -457,7 +457,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -492,7 +492,7 @@ class AdminController extends AbstractController
 
         if(!isset($d[0]) || !isset($d[1])){
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        }else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -527,7 +527,7 @@ class AdminController extends AbstractController
 
         if (!isset($d[0]) || !isset($d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        } else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -562,7 +562,7 @@ class AdminController extends AbstractController
 
         if (!isset($d[0]) || !isset($d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        } else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -592,7 +592,7 @@ class AdminController extends AbstractController
 
         if (!isset($d[0]) || !isset($d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
-        } else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+        } else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
             return new JsonResponse(['error' => 'Accès interdit'], 403);
         }
 
@@ -616,7 +616,7 @@ class AdminController extends AbstractController
 
     //     if (!isset($d[0]) || !isset($d[1])) {
     //         return new JsonResponse(['error' => 'Accès interdit'], 403);
-    //     } else if (!('R0L3_@DM1N' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+    //     } else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
     //         return new JsonResponse(['error' => 'Accès interdit'], 403);
     //     }
 

@@ -17,7 +17,7 @@ const OneMediaPage = () => {
     const fetchMedia = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/media/${id}`, { 
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          headers: { 'Content-Type': 'application/json' },
         });
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des informations du média');
