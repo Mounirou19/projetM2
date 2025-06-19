@@ -16,7 +16,9 @@ const EditProfilPage = () => {
     // Récupérer les données de l'utilisateur depuis l'API
     const fetchUser = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/profil/${id}?infos=${infos}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/profil/${id}?infos=${infos}`, { 
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        });
         const data = await response.json();
         setFormData({
           lastname: data.lastname,
@@ -43,7 +45,7 @@ const EditProfilPage = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/user/edit/${id}?infos=${infos}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
         body: JSON.stringify(formData),
       });
 

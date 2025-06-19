@@ -16,7 +16,9 @@ const OneMediaPage = () => {
     // Récupérer les informations du média
     const fetchMedia = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/media/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/media/${id}`, { 
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        });
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des informations du média');
         }
@@ -33,7 +35,9 @@ const OneMediaPage = () => {
     const checkFavoriteStatus = async () => {
       if (userId && userRole === process.env.REACT_APP_ROLE_USER) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/get/${userId}/${id}?infos=${infos}`);
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/get/${userId}/${id}?infos=${infos}`, { 
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          });
           if (!response.ok) {
             throw new Error('Erreur lors de la vérification du statut favori');
           }
@@ -54,7 +58,7 @@ const OneMediaPage = () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/create/${userId}/${id}?infos=${infos}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
         });
   
         if (response.ok) {

@@ -174,7 +174,7 @@ class AdminController extends AbstractController
         $user->setLastName($data['lastname']);
         $user->setFirstName($data['firstname']);
         $user->setEmail($data['email']);
-        $user->setPassword(md5($data['password']));
+        $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
         $user->setRole($data['role']);
         $user->setStatus(true);
 

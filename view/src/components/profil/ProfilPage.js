@@ -23,7 +23,9 @@ const Profile = () => {
 
     const fetchFavorites = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/user/${id}?infos=${infos}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/user/${id}?infos=${infos}`, { 
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        });
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des médias favoris');
         }
@@ -50,7 +52,7 @@ const Profile = () => {
         
         const response = await fetch(`${process.env.REACT_APP_API_URL}/delete/profil/${id}?infos=${infos}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
         });
         
         if (response.ok) {
@@ -74,7 +76,7 @@ const Profile = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/delete/${mediaId}?infos=${infos}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
       });
 
       if (response.ok) {

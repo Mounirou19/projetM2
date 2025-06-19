@@ -20,7 +20,7 @@ const StatsPage = () => {
   const fetchScores = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/medias?infos=${infos}`, {
-      headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}` },
+      headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
       });
     
       if (!response.ok) throw new Error("Erreur lors de la récupération des scores des médias");

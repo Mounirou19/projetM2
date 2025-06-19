@@ -26,7 +26,7 @@ const CreateUser = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/create?infos=${infos}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}` },
+        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
         body: JSON.stringify(formData),
       });
 
