@@ -93,7 +93,51 @@
   table {
     width: 100%;
   }
-  
+
+  /* Ajoutez ces styles à votre fichier Admin.css existant */
+
+.admin-section {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.section-header:hover {
+  background-color: #e0e0e0;
+}
+
+.section-content {
+  padding: 15px;
+}
+
+.search-bar, .filter-dropdown {
+  margin-bottom: 15px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-dropdown select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 200px;
+}
+ 
   @media (max-width: 768px) {
     .admin-container {
       padding: 10px;
