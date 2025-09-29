@@ -31,7 +31,6 @@ const Login = () => {
             localStorage.setItem("email", data.datas.email);
             localStorage.setItem("role", data.datas.role);
             localStorage.setItem('jwtToken', data.token);
-            console.log("Connexion réussie :", data.datas);
             if (data.datas.token === token && data.datas.role === roleA) {
                 alert("Vous allez être redirigé vers la page admin.");
                 window.location.href = '/admin'; // Redirige vers la page admin
