@@ -1,0 +1,120 @@
+@startuml Diagramme de Cas d'Utilisation - CinéManga
+
+!theme aws-orange
+title Diagramme de Cas d'Utilisation - Plateforme CinéManga
+
+' Définition des acteurs
+actor "Visiteur" as visitor
+actor "Utilisateur\nConnecté" as user
+actor "Administrateur" as admin
+
+' Package système
+package "Système CinéManga" {
+    
+    ' Cas d'utilisation publics
+    usecase "Consulter les médias" as UC1
+    usecase "Rechercher un média" as UC2
+    usecase "Voir détails média" as UC3
+    usecase "S'inscrire" as UC4
+    usecase "Se connecter" as UC5
+    usecase "Contacter l'équipe" as UC6
+    
+    ' Cas d'utilisation utilisateur connecté
+    usecase "Gérer son profil" as UC7
+    usecase "Ajouter aux favoris" as UC8
+    usecase "Retirer des favoris" as UC9
+    usecase "Consulter ses favoris" as UC10
+    usecase "Noter un média" as UC11
+    usecase "Se déconnecter" as UC12
+    
+    ' Cas d'utilisation administrateur
+    usecase "Accéder au dashboard" as UC13
+    usecase "Gérer les utilisateurs" as UC14
+    usecase "Créer un utilisateur" as UC15
+    usecase "Modifier un utilisateur" as UC16
+    usecase "Désactiver un utilisateur" as UC17
+    usecase "Gérer les médias" as UC18
+    usecase "Créer un média" as UC19
+    usecase "Modifier un média" as UC20
+    usecase "Supprimer un média" as UC21
+    usecase "Consulter les messages" as UC22
+    usecase "Répondre aux contacts" as UC23
+    usecase "Voir les statistiques" as UC24
+}
+
+' Relations Visiteur
+visitor --> UC1
+visitor --> UC2
+visitor --> UC3
+visitor --> UC4
+visitor --> UC5
+visitor --> UC6
+
+' Relations Utilisateur connecté
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC7
+user --> UC8
+user --> UC9
+user --> UC10
+user --> UC11
+user --> UC12
+user --> UC6
+
+' Relations Administrateur (hérite de User)
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC7
+admin --> UC8
+admin --> UC9
+admin --> UC10
+admin --> UC11
+admin --> UC12
+admin --> UC6
+admin --> UC13
+admin --> UC14
+admin --> UC15
+admin --> UC16
+admin --> UC17
+admin --> UC18
+admin --> UC19
+admin --> UC20
+admin --> UC21
+admin --> UC22
+admin --> UC23
+admin --> UC24
+
+' Relations d'inclusion
+UC14 ..> UC15 : include
+UC14 ..> UC16 : include
+UC14 ..> UC17 : include
+
+UC18 ..> UC19 : include
+UC18 ..> UC20 : include
+UC18 ..> UC21 : include
+
+' Relations d'extension
+UC11 ..> UC3 : extend
+UC8 ..> UC3 : extend
+
+note right of UC11
+  La notation n'est possible
+  que sur la page de détail
+  d'un média
+end note
+
+note right of UC8
+  L'ajout aux favoris se fait
+  depuis la page de détail
+  du média
+end note
+
+note bottom of admin
+  L'administrateur hérite
+  de tous les droits utilisateur
+  plus les fonctions d'administration
+end note
+
+@enduml

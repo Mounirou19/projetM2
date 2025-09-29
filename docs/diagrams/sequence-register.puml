@@ -1,0 +1,86 @@
+@startuml Séquence Inscription - CinéManga
+
+!theme aws-orange
+title Diagramme de Séquence - Inscription Utilisateur
+
+actor "Visiteur" as visitor
+participant "Frontend\n(React)" as frontend
+participant "AuthController" as auth
+participant "Validator" as validator
+participant "UsersRepository" as repo
+participant "Database\n(MySQL)" as db
+
+visitor -> frontend : Saisit informations\n(nom, prénom, email, password)
+frontend -> frontend : Validation côté client\n(format email, longueur password)
+frontend -> auth : POST /register\n{lastName, firstName, email, password}
+
+activate auth
+auth -> auth : Décode données JSON
+
+' Validation des contraintes
+auth -> validator : validate(data, constraints)
+activate validator
+validator -> validator : Vérifie NotBlank, Email, Length
+validator --> auth : Violations ou OK
+deactivate validator
+
+alt Données valides
+    ' Vérification unicité email
+    auth -> repo : findOneBy(['email' => email])
+    activate repo
+    repo -> db : SELECT * FROM users\nWHERE email = ?
+    activate db
+    db --> repo : Résultat ou null
+    deactivate db
+    repo --> auth : User entity ou null
+    deactivate repo
+    
+    alt Email disponible
+        ' Création utilisateur
+        auth -> auth : new Users()
+        auth -> auth : setLastName(data['lastName'])
+        auth -> auth : setFirstName(data['firstName'])
+        auth -> auth : setEmail(data['email'])
+        auth -> auth : password_hash(password, PASSWORD_BCRYPT)
+        auth -> auth : setPassword(hashedPassword)
+        auth -> auth : setRole('ROLE_USER')
+        auth -> auth : setStatus(true)
+        
+        ' Sauvegarde en base
+        auth -> repo : persist(user)
+        auth -> repo : flush()
+        repo -> db : INSERT INTO users...
+        activate db
+        db --> repo : ID généré
+        deactivate db
+        
+        auth --> frontend : JsonResponse\n{status: 'success',\n message: 'Utilisateur créé'}
+        frontend --> visitor : Confirmation inscription\n+ redirection login
+        
+    else Email déjà utilisé
+        auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Utilisateur déjà existant'}
+        frontend --> visitor : Erreur email existant
+    end
+    
+else Données invalides
+    auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid data',\n errors: [violations]}
+    frontend --> visitor : Affichage erreurs\nde validation
+end
+
+deactivate auth
+
+note right of auth
+  Le mot de passe est immédiatement
+  haché avec bcrypt avant stockage.
+  Aucun mot de passe en clair n'est
+  conservé dans le système.
+end note
+
+note right of validator
+  Les contraintes Symfony permettent
+  une validation robuste côté serveur
+  en complément de la validation
+  côté client.
+end note
+
+@enduml

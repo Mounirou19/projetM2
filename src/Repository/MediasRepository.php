@@ -7,10 +7,23 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour l'entité Medias
+ * 
+ * Ce repository gère les opérations de base de données spécifiques aux médias
+ * (films, séries, mangas). Il peut contenir des requêtes personnalisées pour
+ * filtrer par type, rechercher par titre, ou trier par score.
+ * 
  * @extends ServiceEntityRepository<Medias>
+ * @author Mounirou
+ * @version 1.0
  */
 class MediasRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     * 
+     * @param ManagerRegistry $registry Registry Doctrine pour la gestion des entités
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Medias::class);

@@ -7,10 +7,23 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour l'entité Contacts
+ * 
+ * Ce repository gère les opérations de base de données pour les messages
+ * de contact. Il peut contenir des requêtes pour filtrer par statut,
+ * trier par date ou rechercher par expéditeur.
+ * 
  * @extends ServiceEntityRepository<Contacts>
+ * @author Mounirou
+ * @version 1.0
  */
 class ContactsRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     * 
+     * @param ManagerRegistry $registry Registry Doctrine pour la gestion des entités
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Contacts::class);

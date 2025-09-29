@@ -9,10 +9,35 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Contacts;
 
+/**
+ * Contrôleur pour la gestion des messages de contact
+ * 
+ * Ce contrôleur gère le système de contact du site CinéManga :
+ * - Création de nouveaux messages de contact depuis le formulaire public
+ * - Gestion des notifications de nouveaux messages
+ * - Système de logging des contacts reçus
+ * 
+ * Le contrôleur permet aux visiteurs (anonymes) d'envoyer des messages
+ * sans authentification requise. Les messages sont sauvegardés en base
+ * et des notifications sont générées pour l'équipe administrative.
+ * 
+ * @author Mounirou
+ * @version 1.0
+ */
 class ContactController extends AbstractController
 {
+    /**
+     * Gestionnaire d'entités Doctrine pour les opérations base de données
+     * 
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * Constructeur du contrôleur contact
+     * 
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités injecté
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;

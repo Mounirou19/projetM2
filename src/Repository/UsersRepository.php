@@ -7,10 +7,23 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour l'entité Users
+ * 
+ * Ce repository gère les opérations de base de données spécifiques aux utilisateurs.
+ * Il étend ServiceEntityRepository pour hériter des méthodes CRUD de base
+ * et peut contenir des requêtes personnalisées pour les besoins métier.
+ * 
  * @extends ServiceEntityRepository<Users>
+ * @author Mounirou
+ * @version 1.0
  */
 class UsersRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     * 
+     * @param ManagerRegistry $registry Registry Doctrine pour la gestion des entités
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Users::class);

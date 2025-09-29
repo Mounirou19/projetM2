@@ -7,10 +7,23 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour l'entité Profils
+ * 
+ * Ce repository gère les opérations de base de données pour les relations
+ * utilisateur-média (favoris). Il peut contenir des requêtes pour récupérer
+ * les favoris d'un utilisateur ou vérifier l'existence d'une relation.
+ * 
  * @extends ServiceEntityRepository<Profils>
+ * @author Mounirou
+ * @version 1.0
  */
 class ProfilsRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     * 
+     * @param ManagerRegistry $registry Registry Doctrine pour la gestion des entités
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Profils::class);

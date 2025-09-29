@@ -1,0 +1,67 @@
+@startuml Séquence Connexion - CinéManga
+
+!theme aws-orange
+title Diagramme de Séquence - Connexion Utilisateur
+
+actor "Utilisateur" as user
+participant "Frontend\n(React)" as frontend
+participant "AuthController" as auth
+participant "UsersRepository" as repo
+participant "Database\n(MySQL)" as db
+participant "JWTManager" as jwt
+
+user -> frontend : Saisit email/password
+frontend -> frontend : Validation côté client
+frontend -> auth : POST /login\n{email, password}
+
+activate auth
+auth -> auth : Décode les données JSON
+auth -> repo : findOneBy(['email' => email])
+
+activate repo
+repo -> db : SELECT * FROM users\nWHERE email = ?
+activate db
+db --> repo : Résultat utilisateur
+deactivate db
+repo --> auth : User entity ou null
+deactivate repo
+
+alt Utilisateur trouvé
+    auth -> auth : password_verify(password, user.password)
+    
+    alt Mot de passe correct
+        auth -> jwt : create(user)
+        activate jwt
+        jwt --> auth : JWT Token
+        deactivate jwt
+        
+        auth --> frontend : JsonResponse\n{status: 'success',\n token: 'jwt_token',\n datas: user_info}
+        frontend -> frontend : Stockage token\n(localStorage)
+        frontend -> frontend : Redirection selon rôle
+        frontend --> user : Connexion réussie
+        
+    else Mot de passe incorrect
+        auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid credentials'}
+        frontend --> user : Erreur de connexion
+    end
+    
+else Utilisateur non trouvé
+    auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid credentials'}
+    frontend --> user : Erreur de connexion
+end
+
+deactivate auth
+
+note right of auth
+  Le contrôleur ne révèle jamais
+  si c'est l'email ou le mot de passe
+  qui est incorrect (sécurité)
+end note
+
+note right of jwt
+  Le token JWT contient les informations
+  utilisateur encodées et signées
+  avec une durée de vie limitée
+end note
+
+@enduml

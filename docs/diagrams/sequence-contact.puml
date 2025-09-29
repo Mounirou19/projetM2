@@ -1,0 +1,78 @@
+@startuml Séquence Contact - CinéManga
+
+!theme aws-orange
+title Diagramme de Séquence - Système de Contact
+
+actor "Visiteur/\nUtilisateur" as user
+participant "Frontend\n(React)" as frontend
+participant "ContactController" as contact
+participant "ContactsRepository" as repo
+participant "Database\n(MySQL)" as db
+participant "Système de\nFichiers" as fs
+
+user -> frontend : Remplit formulaire contact\n(nom, email, sujet, message)
+frontend -> frontend : Validation côté client
+frontend -> contact : POST /contact/create\n{name, email, subject, message}
+
+activate contact
+contact -> contact : Décode données JSON
+contact -> contact : Extraction des champs\n+ validation présence
+
+alt Tous les champs présents
+    ' Création de l'objet contact
+    contact -> contact : new Contacts()
+    contact -> contact : setName(name)
+    contact -> contact : setEmail(email)
+    contact -> contact : setSubject(subject)
+    contact -> contact : setMessage(message)
+    contact -> contact : setCreatedAt(new DateTimeImmutable())
+    contact -> contact : setStatus(true) // Non lu
+    
+    ' Sauvegarde en base
+    contact -> repo : persist(contact)
+    contact -> repo : flush()
+    repo -> db : INSERT INTO contacts...
+    activate db
+    db --> repo : ID généré
+    deactivate db
+    
+    ' Écriture notification dans fichier log
+    contact -> contact : Construction chemin log\n($_SERVER['DOCUMENT_ROOT']/../notifications.log)
+    contact -> contact : Construction message log\n("Nouveau message de {name} à {datetime}")
+    contact -> fs : file_put_contents(filePath, logMessage, FILE_APPEND)
+    activate fs
+    fs --> contact : Écriture réussie
+    deactivate fs
+    
+    contact --> frontend : JsonResponse\n{status: 'Contact créé!'}
+    frontend -> frontend : Affichage confirmation\n+ reset formulaire
+    frontend --> user : Message envoyé avec succès
+    
+else Champs manquants
+    contact --> frontend : JsonResponse\n{status: 'error',\n message: 'Tous les champs sont requis'}
+    frontend --> user : Erreurs validation
+end
+
+deactivate contact
+
+' Processus de notification admin (asynchrone)
+note over fs
+  Le fichier notifications.log permet
+  à l'administrateur de surveiller
+  les nouveaux messages sans
+  interroger constamment la base
+end note
+
+note right of contact
+  Le statut true signifie "non lu"
+  L'admin pourra marquer comme lu
+  via l'interface d'administration
+end note
+
+note right of repo
+  La date de création est automatiquement
+  définie au moment de l'envoi pour
+  un suivi chronologique des messages
+end note
+
+@enduml

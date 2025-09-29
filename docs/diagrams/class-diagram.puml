@@ -1,0 +1,254 @@
+@startuml Diagramme de Classes - CinéManga
+
+!theme aws-orange
+title Diagramme de Classes - Architecture CinéManga
+
+' Entités principales
+class Users {
+    -id: int
+    -lastname: string
+    -firstname: string
+    -email: string (unique)
+    -password: string (hashed)
+    -role: string
+    -status: boolean
+    --
+    +getId(): ?int
+    +getLastname(): ?string
+    +setLastname(string): self
+    +getFirstname(): ?string
+    +setFirstname(string): self
+    +getEmail(): ?string
+    +setEmail(string): self
+    +getPassword(): ?string
+    +setPassword(string): self
+    +getRole(): ?string
+    +setRole(string): self
+    +isStatus(): ?boolean
+    +setStatus(boolean): self
+    --
+    +getRoles(): array
+    +getUserIdentifier(): string
+    +eraseCredentials(): void
+}
+
+class Medias {
+    -id: int
+    -title: string
+    -type: string
+    -imageUrl: string
+    -description: text
+    -status: boolean
+    -score: int
+    --
+    +getId(): ?int
+    +getTitle(): ?string
+    +setTitle(string): self
+    +getType(): ?string
+    +setType(string): self
+    +getImageUrl(): ?string
+    +setImageUrl(string): self
+    +getDescription(): ?string
+    +setDescription(string): self
+    +isStatus(): ?boolean
+    +setStatus(boolean): self
+    +getScore(): ?int
+    +setScore(int): self
+}
+
+class Profils {
+    -id: int
+    -id_user: int
+    -id_media: int
+    --
+    +getId(): ?int
+    +getIdUser(): ?int
+    +setIdUser(int): self
+    +getIdMedia(): ?int
+    +setIdMedia(int): self
+}
+
+class Contacts {
+    -id: int
+    -name: string
+    -email: string
+    -subject: string
+    -message: text
+    -createdAt: DateTimeImmutable
+    -status: boolean
+    --
+    +getId(): ?int
+    +getName(): ?string
+    +setName(string): self
+    +getEmail(): ?string
+    +setEmail(string): self
+    +getSubject(): ?string
+    +setSubject(string): self
+    +getMessage(): ?string
+    +setMessage(string): self
+    +getCreatedAt(): ?DateTimeImmutable
+    +setCreatedAt(DateTimeImmutable): self
+    +isStatus(): ?boolean
+    +setStatus(boolean): self
+}
+
+' Contrôleurs
+class AuthController {
+    -entityManager: EntityManagerInterface
+    --
+    +__construct(EntityManagerInterface)
+    +index(): JsonResponse
+    +register(Request, ValidatorInterface): JsonResponse
+    +login(Request, JWTTokenManagerInterface): JsonResponse
+    +protected(): JsonResponse
+}
+
+class MediaController {
+    -entityManager: EntityManagerInterface
+    --
+    +__construct(EntityManagerInterface)
+    +index(): JsonResponse
+    +show(int): JsonResponse
+}
+
+class AdminController {
+    -entityManager: EntityManagerInterface
+    --
+    +__construct(EntityManagerInterface)
+    -isAuthorized(Request): boolean
+    +index(): JsonResponse
+    +dashboard(Request): JsonResponse
+    +getMedias(Request): JsonResponse
+    +createUser(Request): JsonResponse
+    +createMedia(Request): JsonResponse
+    +getUserr(int, Request): JsonResponse
+    +getMedia(int, Request): JsonResponse
+    +deleteUser(int, Request): JsonResponse
+    +deleteUseForEver(int, Request): JsonResponse
+    +reactivateUser(int, Request): JsonResponse
+    +deleteMedia(int, Request): JsonResponse
+    +reactivateMedia(int, Request): JsonResponse
+    +updateUser(int, Request): JsonResponse
+    +updateMedia(int, Request): JsonResponse
+    +getContact(int, Request): JsonResponse
+    +contactLu(int, Request): JsonResponse
+    +deleteContact(int, Request): JsonResponse
+}
+
+class ProfilController {
+    -entityManager: EntityManagerInterface
+    --
+    +__construct(EntityManagerInterface)
+    +index(): JsonResponse
+    +getProfil(int, int, Request): JsonResponse
+    +createProfilForUser(int, int, Request): JsonResponse
+    +getProfilForUser(int, Request): JsonResponse
+    +deleteProfilForUser(int, Request): JsonResponse
+    +getUserForProfil(int, Request): JsonResponse
+    +deleteProfilByUser(int, Request): JsonResponse
+}
+
+class ContactController {
+    -entityManager: EntityManagerInterface
+    --
+    +__construct(EntityManagerInterface)
+    +createContact(Request): JsonResponse
+}
+
+' Repositories
+class UsersRepository {
+    --
+    +findOneBy(array): ?Users
+    +findAll(): array
+    +find(mixed): ?Users
+}
+
+class MediasRepository {
+    --
+    +findOneBy(array): ?Medias
+    +findAll(): array
+    +find(mixed): ?Medias
+}
+
+class ProfilsRepository {
+    --
+    +findBy(array): array
+    +findOneBy(array): ?Profils
+    +find(mixed): ?Profils
+}
+
+class ContactsRepository {
+    --
+    +findAll(): array
+    +find(mixed): ?Contacts
+}
+
+' Relations entre entités
+Users ||--o{ Profils : "1..*"
+Medias ||--o{ Profils : "1..*"
+
+' Relations contrôleur-repository
+AuthController --> UsersRepository : uses
+MediaController --> MediasRepository : uses
+AdminController --> UsersRepository : uses
+AdminController --> MediasRepository : uses
+AdminController --> ProfilsRepository : uses
+AdminController --> ContactsRepository : uses
+ProfilController --> UsersRepository : uses
+ProfilController --> MediasRepository : uses
+ProfilController --> ProfilsRepository : uses
+ContactController --> ContactsRepository : uses
+
+' Relations repository-entity
+UsersRepository --> Users : manages
+MediasRepository --> Medias : manages
+ProfilsRepository --> Profils : manages
+ContactsRepository --> Contacts : manages
+
+' Interfaces Symfony
+interface UserInterface
+interface PasswordAuthenticatedUserInterface
+
+Users ..|> UserInterface : implements
+Users ..|> PasswordAuthenticatedUserInterface : implements
+
+' Enumérations
+enum MediaType {
+    FILM
+    SERIE
+    MANGA
+}
+
+enum UserRole {
+    ROLE_USER
+    ROLE_ADMIN
+}
+
+Medias --> MediaType : type
+Users --> UserRole : role
+
+note top of Users
+  Entité principale pour la gestion
+  des utilisateurs avec authentification
+  JWT et système de rôles
+end note
+
+note top of Medias
+  Stockage des informations sur tous
+  les types de médias (films, séries, mangas)
+  avec système de notation
+end note
+
+note top of Profils
+  Table de liaison pour gérer les favoris
+  et watchlists des utilisateurs
+  (relation many-to-many)
+end note
+
+note bottom of AdminController
+  Contrôleur sécurisé avec vérification
+  de tokens d'administration pour toutes
+  les opérations sensibles
+end note
+
+@enduml

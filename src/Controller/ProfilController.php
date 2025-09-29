@@ -11,10 +11,34 @@ use App\Entity\Profils;
 use App\Entity\Users;
 use App\Entity\Medias;
 
+/**
+ * Contrôleur de gestion des profils utilisateur et favoris
+ * 
+ * Ce contrôleur gère toutes les opérations liées aux profils utilisateur :
+ * - Gestion des favoris (ajout, suppression, consultation)
+ * - Vérification des relations utilisateur-média
+ * - Édition des informations personnelles
+ * - Suppression de compte utilisateur
+ * 
+ * Sécurité : Vérifications d'autorisation sur chaque route
+ * 
+ * @author Mounirou
+ * @version 1.0
+ */
 class ProfilController extends AbstractController
 {
+    /**
+     * Gestionnaire d'entités Doctrine pour les opérations base de données
+     * 
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * Constructeur du contrôleur profil
+     * 
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités injecté
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;

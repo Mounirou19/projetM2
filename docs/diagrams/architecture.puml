@@ -1,0 +1,179 @@
+@startuml Architecture Système - CinéManga
+
+!theme aws-orange
+title Architecture Système - CinéManga Platform
+
+' Couches principales
+package "Frontend Layer" #lightblue {
+    component [React App] as react
+    component [Router] as router
+    component [Components] as components
+    component [Services] as services
+    
+    react --> router
+    react --> components
+    react --> services
+}
+
+package "Reverse Proxy Layer" #lightgreen {
+    component [Nginx] as nginx
+    note right of nginx
+      - Load balancing
+      - SSL termination
+      - Static files serving
+      - Request routing
+    end note
+}
+
+package "Backend Layer" #lightyellow {
+    package "Symfony Framework" {
+        component [Controllers] as controllers
+        component [Services] as sf_services
+        component [Entities] as entities
+        component [Repositories] as repositories
+        component [Security] as security
+        
+        controllers --> sf_services
+        sf_services --> repositories
+        repositories --> entities
+        controllers --> security
+    }
+    
+    component [JWT Manager] as jwt
+    component [Doctrine ORM] as doctrine
+    
+    security --> jwt
+    repositories --> doctrine
+}
+
+package "Database Layer" #lightcoral {
+    database [MySQL 8.0] as mysql
+    component [phpMyAdmin] as phpmyadmin
+    
+    phpmyadmin --> mysql
+}
+
+package "Infrastructure Layer" #lightgray {
+    component [Docker Engine] as docker
+    component [Docker Compose] as compose
+    
+    docker --> compose
+}
+
+' Flux de données
+react --> nginx : HTTP/HTTPS Requests
+nginx --> controllers : Proxy to PHP-FPM
+controllers --> mysql : Database Queries via Doctrine
+mysql --> controllers : Query Results
+
+' Connexions infrastructure
+compose --> react : Container Management
+compose --> nginx : Container Management
+compose --> controllers : Container Management
+compose --> mysql : Container Management
+compose --> phpmyadmin : Container Management
+
+' Services externes (futures extensions)
+cloud "External Services" #white {
+    component [CDN] as cdn
+    component [Email Service] as email
+    component [Video Streaming] as streaming
+    component [Analytics] as analytics
+}
+
+' Connexions externes futures
+react -.-> cdn : Static Assets
+controllers -.-> email : Notifications
+controllers -.-> streaming : Video Content
+react -.-> analytics : User Tracking
+
+' Détails des composants
+note right of react
+  <b>React Components:</b>
+  - HomePage
+  - MediaPage
+  - AdminPage
+  - ProfilPage
+  - AuthPages
+  
+  <b>State Management:</b>
+  - Local State (useState)
+  - JWT Token Storage
+  - User Context
+end note
+
+note right of controllers
+  <b>Main Controllers:</b>
+  - AuthController (JWT)
+  - MediaController (CRUD)
+  - AdminController (Management)
+  - ProfilController (Favorites)
+  - ContactController (Messages)
+end note
+
+note right of mysql
+  <b>Database Schema:</b>
+  - users (authentication)
+  - medias (content)
+  - profils (favorites)
+  - contacts (messages)
+  
+  <b>Features:</b>
+  - ACID Compliance
+  - Foreign Key Constraints
+  - Indexing for Performance
+end note
+
+' Sécurité
+package "Security Layer" #pink {
+    component [CORS Protection] as cors
+    component [JWT Authentication] as jwt_auth
+    component [Input Validation] as validation
+    component [Admin Access Control] as admin_access
+    
+    nginx --> cors
+    controllers --> jwt_auth
+    controllers --> validation
+    controllers --> admin_access
+}
+
+' Monitoring et logs
+package "Monitoring Layer" #lightyellow {
+    component [Application Logs] as app_logs
+    component [Nginx Logs] as nginx_logs
+    component [Database Logs] as db_logs
+    component [Contact Notifications] as notifications
+    
+    controllers --> app_logs
+    nginx --> nginx_logs
+    mysql --> db_logs
+    controllers --> notifications
+}
+
+' Volumes de données
+storage "Data Persistence" #lightsteelblue {
+    folder [Database Volume] as db_volume
+    folder [Log Files] as log_files
+    folder [Static Assets] as static_files
+    folder [Upload Directory] as uploads
+}
+
+mysql --> db_volume
+app_logs --> log_files
+react --> static_files
+controllers --> uploads
+
+' Configuration
+package "Configuration Layer" #lightcyan {
+    file [Environment Variables] as env
+    file [Docker Compose Config] as docker_config
+    file [Nginx Config] as nginx_config
+    file [Symfony Config] as symfony_config
+    
+    compose --> docker_config
+    nginx --> nginx_config
+    controllers --> symfony_config
+    controllers --> env
+}
+
+@enduml

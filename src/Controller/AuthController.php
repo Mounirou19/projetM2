@@ -12,10 +12,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
+/**
+ * Contrôleur d'authentification - Gestion des connexions et inscriptions
+ * 
+ * Ce contrôleur gère toutes les opérations liées à l'authentification des utilisateurs :
+ * - Inscription de nouveaux utilisateurs
+ * - Connexion avec génération de tokens JWT
+ * - Validation des données d'entrée
+ * - Sécurisation des accès
+ * 
+ * @author Mounirou
+ * @version 1.0
+ */
 class AuthController extends AbstractController
 {
+    /**
+     * Entity Manager pour les opérations de base de données
+     */
     private $entityManager;
 
+    /**
+     * Constructeur - Injection de dépendances
+     * 
+     * @param EntityManagerInterface $entityManager Manager pour les opérations BDD
+     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;

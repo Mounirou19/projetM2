@@ -1,0 +1,91 @@
+@startuml Séquence Favoris - CinéManga
+
+!theme aws-orange
+title Diagramme de Séquence - Ajout aux Favoris
+
+actor "Utilisateur\nConnecté" as user
+participant "Frontend\n(React)" as frontend
+participant "ProfilController" as profil
+participant "UsersRepository" as userRepo
+participant "MediasRepository" as mediaRepo
+participant "ProfilsRepository" as profilRepo
+participant "Database\n(MySQL)" as db
+
+user -> frontend : Clique "Ajouter aux favoris"\nsur un média
+frontend -> frontend : Vérification token JWT
+frontend -> profil : GET /profil/create/{userId}/{mediaId}\n+ paramètres d'autorisation
+
+activate profil
+profil -> profil : Vérification autorisation\n(ROLE_USER dans paramètres)
+
+alt Autorisation valide
+    ' Vérification existence utilisateur
+    profil -> userRepo : find(userId)
+    activate userRepo
+    userRepo -> db : SELECT * FROM users\nWHERE id = ?
+    activate db
+    db --> userRepo : User data
+    deactivate db
+    userRepo --> profil : User entity
+    deactivate userRepo
+    
+    alt Utilisateur trouvé
+        ' Vérification si pas déjà en favoris
+        profil -> profilRepo : findBy(['id_user' => userId,\n'id_media' => mediaId])
+        activate profilRepo
+        profilRepo -> db : SELECT * FROM profils\nWHERE id_user = ? AND id_media = ?
+        activate db
+        db --> profilRepo : Résultat existant ou vide
+        deactivate db
+        profilRepo --> profil : Profil entity ou null
+        deactivate profilRepo
+        
+        alt Pas encore en favoris
+            ' Création du profil favori
+            profil -> profil : new Profils()
+            profil -> profil : setIdUser(userId)
+            profil -> profil : setIdMedia(mediaId)
+            
+            ' Sauvegarde
+            profil -> profilRepo : persist(profil)
+            profil -> profilRepo : flush()
+            profilRepo -> db : INSERT INTO profils\n(id_user, id_media)
+            activate db
+            db --> profilRepo : ID généré
+            deactivate db
+            
+            profil --> frontend : JsonResponse\n{status: 'success',\n message: 'Profil créé'}
+            frontend -> frontend : Mise à jour interface\n(bouton devient "Retirer")
+            frontend --> user : Média ajouté aux favoris
+            
+        else Déjà en favoris
+            profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Déjà en favoris'}
+            frontend --> user : Information déjà favori
+        end
+        
+    else Utilisateur non trouvé
+        profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Utilisateur non trouvé'}
+        frontend --> user : Erreur utilisateur
+    end
+    
+else Autorisation invalide
+    profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Accès interdit'}
+    frontend --> user : Erreur d'autorisation
+end
+
+deactivate profil
+
+note right of profil
+  La vérification d'autorisation
+  s'assure que seul un utilisateur
+  connecté peut ajouter des favoris
+  pour son propre compte
+end note
+
+note right of profilRepo
+  La table profils fait le lien
+  many-to-many entre users et medias
+  pour gérer les listes personnalisées
+end note
+
+@enduml

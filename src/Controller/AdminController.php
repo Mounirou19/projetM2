@@ -12,10 +12,45 @@ use App\Entity\Contacts;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Contrôleur d'administration du système CinéManga
+ * 
+ * Ce contrôleur gère toutes les fonctionnalités d'administration du site :
+ * - Tableau de bord avec statistiques et données globales
+ * - Gestion CRUD complète des médias (films, séries, mangas)
+ * - Gestion des utilisateurs et de leurs profils
+ * - Consultation et gestion des messages de contact
+ * - Système d'autorisation avec token admin et vérifications multiples
+ * 
+ * Sécurité :
+ * - Double vérification : token admin ET paramètres de requête
+ * - Contrôle des rôles utilisateurs
+ * - Protection contre les accès non autorisés
+ * 
+ * Ce contrôleur est le cœur de l'interface d'administration et contient
+ * toutes les opérations sensibles nécessitant des privilèges élevés.
+ * 
+ * @author Mounirou
+ * @version 1.0
+ */
 class AdminController extends AbstractController
 {
+    /**
+     * Gestionnaire d'entités Doctrine pour les opérations base de données
+     * 
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
+    /**
+     * Vérifier l'autorisation d'accès administrateur
+     * 
+     * Vérifie la présence et la validité du token d'administration
+     * dans les en-têtes de la requête HTTP.
+     * 
+     * @param Request $request Requête HTTP à vérifier
+     * @return bool true si autorisé, false sinon
+     */
     private function isAuthorized(Request $request): bool
     {
         $token = $request->headers->get('X-ADMIN-TOKEN');

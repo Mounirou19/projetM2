@@ -1,0 +1,88 @@
+@startuml Séquence Administration - CinéManga
+
+!theme aws-orange
+title Diagramme de Séquence - Création de Média par Admin
+
+actor "Administrateur" as admin
+participant "Frontend\n(React)" as frontend
+participant "AdminController" as adminCtrl
+participant "MediasRepository" as mediaRepo
+participant "Database\n(MySQL)" as db
+
+admin -> frontend : Accède à "Créer un média"
+frontend -> frontend : Vérification token admin local
+frontend -> adminCtrl : POST /admin/media/create\n+ headers X-ADMIN-TOKEN\n+ query params (role, token)\n+ body {title, description, type, imageUrl}
+
+activate adminCtrl
+
+' Double vérification d'autorisation
+adminCtrl -> adminCtrl : isAuthorized(request)\nvérification X-ADMIN-TOKEN
+adminCtrl -> adminCtrl : Extraction query params\n(role, token)
+adminCtrl -> adminCtrl : Vérification ROLE_ADMIN\net token spécial
+
+alt Autorisations valides
+    adminCtrl -> adminCtrl : Décode données JSON
+    
+    ' Vérification unicité du titre
+    adminCtrl -> mediaRepo : findOneBy(['title' => title])
+    activate mediaRepo
+    mediaRepo -> db : SELECT * FROM medias\nWHERE title = ?
+    activate db
+    db --> mediaRepo : Media existant ou null
+    deactivate db
+    mediaRepo --> adminCtrl : Media entity ou null
+    deactivate mediaRepo
+    
+    alt Titre disponible
+        ' Création du média
+        adminCtrl -> adminCtrl : new Medias()
+        adminCtrl -> adminCtrl : setTitle(data['title'])
+        adminCtrl -> adminCtrl : setDescription(data['description'])
+        adminCtrl -> adminCtrl : setType(data['type'])
+        adminCtrl -> adminCtrl : setImageUrl(data['imageUrl'])
+        adminCtrl -> adminCtrl : setStatus(true)
+        adminCtrl -> adminCtrl : setScore(0)
+        
+        ' Sauvegarde
+        adminCtrl -> mediaRepo : persist(media)
+        adminCtrl -> mediaRepo : flush()
+        mediaRepo -> db : INSERT INTO medias...
+        activate db
+        db --> mediaRepo : ID généré
+        deactivate db
+        
+        adminCtrl --> frontend : JsonResponse\n{status: 'success',\n message: 'Média créé'}
+        frontend -> frontend : Mise à jour liste\nou redirection
+        frontend --> admin : Confirmation création
+        
+    else Titre déjà existant
+        adminCtrl --> frontend : JsonResponse\n{status: 'error',\n message: 'Média déjà existant'}
+        frontend --> admin : Erreur titre existant
+    end
+    
+else Autorisations invalides
+    adminCtrl --> frontend : JsonResponse\n{status: 'error',\n message: 'Accès interdit'}
+    frontend --> admin : Erreur d'autorisation
+end
+
+deactivate adminCtrl
+
+note right of adminCtrl
+  Triple vérification d'autorisation :
+  1. Token dans header X-ADMIN-TOKEN
+  2. Rôle ROLE_ADMIN dans query params
+  3. Token spécial d'administration
+  
+  Cette approche, bien que redondante,
+  assure une sécurité maximale pour
+  les opérations d'administration.
+end note
+
+note right of mediaRepo
+  Le score est initialisé à 0
+  lors de la création et sera
+  mis à jour par les notations
+  des utilisateurs.
+end note
+
+@enduml
