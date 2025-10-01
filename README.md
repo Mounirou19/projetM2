@@ -252,9 +252,9 @@ Voir les diagrammes de conception dans `/docs/diagrams/`
 
 ### Contact
 - **Développeur** : Mounirou
-- **Email** : contact@cinemanga.fr
+- **Email** : mounirou.cisse@ensitech.eu
 - **GitHub** : https://github.com/Mounirou19/projetM2
 
 ---
-*Développé avec ❤️ dans le cadre du Master DI*
+*Développé dans le cadre du Master DI*
 
