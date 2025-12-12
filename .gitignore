@@ -10,7 +10,7 @@
 /.env
 .env
 /view/node_modules/
-/docs/
+/docss/
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
