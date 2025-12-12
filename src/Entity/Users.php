@@ -72,6 +72,60 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $status = null;
 
     /**
+     * Date de création du compte (RGPD - traçabilité)
+     */
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
+
+    /**
+     * Date de dernière connexion (sécurité)
+     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastLoginAt = null;
+
+    /**
+     * Nombre de tentatives de connexion échouées (protection brute force)
+     */
+    #[ORM\Column(type: 'integer')]
+    private int $failedLoginAttempts = 0;
+
+    /**
+     * Date de verrouillage du compte après tentatives échouées
+     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lockedUntil = null;
+
+    /**
+     * Adresse IP de la dernière connexion (sécurité)
+     */
+    #[ORM\Column(length: 45, nullable: true)]
+    private ?string $lastLoginIp = null;
+
+    /**
+     * Consentement RGPD (acceptation politique de confidentialité)
+     */
+    #[ORM\Column(type: 'boolean')]
+    private bool $rgpdConsent = false;
+
+    /**
+     * Date du consentement RGPD
+     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $rgpdConsentDate = null;
+
+    /**
+     * Token de vérification email (optionnel mais recommandé)
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $emailVerificationToken = null;
+
+    /**
+     * Indicateur si l'email est vérifié
+     */
+    #[ORM\Column(type: 'boolean')]
+    private bool $isEmailVerified = false;
+
+    /**
      * Récupère l'identifiant unique de l'utilisateur
      * 
      * @return int|null L'ID de l'utilisateur ou null si non défini
@@ -277,5 +331,106 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Méthode requise par UserInterface dans Symfony 5.3+
         return $this->email;
+    }
+
+    // ===== GETTERS ET SETTERS POUR LES NOUVEAUX CHAMPS =====
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeInterface
+    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(?\DateTimeInterface $lastLoginAt): static
+    {
+        $this->lastLoginAt = $lastLoginAt;
+        return $this;
+    }
+
+    public function getFailedLoginAttempts(): int
+    {
+        return $this->failedLoginAttempts;
+    }
+
+    public function setFailedLoginAttempts(int $failedLoginAttempts): static
+    {
+        $this->failedLoginAttempts = $failedLoginAttempts;
+        return $this;
+    }
+
+    public function getLockedUntil(): ?\DateTimeInterface
+    {
+        return $this->lockedUntil;
+    }
+
+    public function setLockedUntil(?\DateTimeInterface $lockedUntil): static
+    {
+        $this->lockedUntil = $lockedUntil;
+        return $this;
+    }
+
+    public function getLastLoginIp(): ?string
+    {
+        return $this->lastLoginIp;
+    }
+
+    public function setLastLoginIp(?string $lastLoginIp): static
+    {
+        $this->lastLoginIp = $lastLoginIp;
+        return $this;
+    }
+
+    public function isRgpdConsent(): bool
+    {
+        return $this->rgpdConsent;
+    }
+
+    public function setRgpdConsent(bool $rgpdConsent): static
+    {
+        $this->rgpdConsent = $rgpdConsent;
+        return $this;
+    }
+
+    public function getRgpdConsentDate(): ?\DateTimeInterface
+    {
+        return $this->rgpdConsentDate;
+    }
+
+    public function setRgpdConsentDate(?\DateTimeInterface $rgpdConsentDate): static
+    {
+        $this->rgpdConsentDate = $rgpdConsentDate;
+        return $this;
+    }
+
+    public function getEmailVerificationToken(): ?string
+    {
+        return $this->emailVerificationToken;
+    }
+
+    public function setEmailVerificationToken(?string $emailVerificationToken): static
+    {
+        $this->emailVerificationToken = $emailVerificationToken;
+        return $this;
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return $this->isEmailVerified;
+    }
+
+    public function setIsEmailVerified(bool $isEmailVerified): static
+    {
+        $this->isEmailVerified = $isEmailVerified;
+        return $this;
     }
 }

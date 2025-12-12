@@ -1,38 +1,53 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    # Configuration du hachage des mots de passe
+    # Utilisation de bcrypt avec un coût élevé pour une sécurité maximale
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        App\Entity\Users:
+            algorithm: bcrypt
+            cost: 12  # Coût élevé pour ralentir les attaques brute force
+    
+    # Fournisseur d'utilisateurs - Entity Doctrine
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\Users
                 property: email
+    
+    # Configuration des pare-feu (firewalls)
     firewalls:
+        # Pare-feu pour la route de connexion (utilise le contrôleur personnalisé)
         login:
             pattern: ^/login
             stateless: true
-            json_login:
-                check_path: /login
-                username_path: email
-                password_path: password
+            security: false  # Désactivé pour utiliser le contrôleur AuthController personnalisé
+        
+        # Pare-feu pour l'inscription (public)
+        register:
+            pattern: ^/register
+            stateless: true
+            security: false
+        
+        # Pare-feu principal avec authentification JWT
         main:
-            # lazy: true
-            # provider: users_in_memory
             stateless: true
             jwt: ~
-
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    
+    # Contrôle d'accès basé sur les rôles
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        # Routes publiques (pas d'authentification requise)
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/media$, roles: PUBLIC_ACCESS }          # Catalogue public
+        - { path: ^/media/\d+$, roles: PUBLIC_ACCESS }      # Détail média public
+        - { path: ^/contact/create, roles: PUBLIC_ACCESS }  # Formulaire contact public
+        
+        # Routes utilisateur (authentification requise)
         - { path: ^/profil, roles: ROLE_USER }
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/rgpd, roles: ROLE_USER }
+        
+        # Routes administrateur (rôle ADMIN requis)
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:

@@ -13,50 +13,72 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // Logique d'authentification (appel API, etc.)
 
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-  
-      if (response.ok) {
-          const data = await response.json();
-          if(data.datas.status === true){
-            localStorage.setItem("token", data.datas.token);
-            localStorage.setItem("id", data.datas.id);
-            localStorage.setItem("lastname", data.datas.lastname);
-            localStorage.setItem("firstname", data.datas.firstname);
-            localStorage.setItem("email", data.datas.email);
-            localStorage.setItem("role", data.datas.role);
-            localStorage.setItem('jwtToken', data.token);
-            if (data.datas.token === token && data.datas.role === roleA) {
-                alert("Vous allez être redirigé vers la page admin.");
-                window.location.href = '/admin'; // Redirige vers la page admin
-            }else if (data.datas.token === 'basicToken' && data.datas.role === roleU) {
-              alert("Vous allez être redirigé vers la page de votre profil.");
-              window.location.href = '/profil'; // Redirige vers la page d'accueil
-            }
-          }else{
-            alert("Votre compte est désactivé, veuillez contacter l'administrateur.");
-            navigate('/contact');
-          }
-      } else {
-        const data = await response.json();
 
-        if(data.message == "noUser"){
-          alert("L'email n'existe pas.");
-          setEmail('');
-          setPassword('');
-        }else if(data.message == "badPassword"){
-          alert("Le mot de passe est incorrect.");
-          setPassword('');
-        }else{
-          alert("Une erreur est survenue, veuillez réessayer.");
+      const data = await response.json();
+
+      console.log("Réponse de l'API de connexion :", data);
+
+      if (response.ok && data.status === 'success') {
+        // Structure de réponse du AuthController
+        const userData = data.datas; // Le contrôleur renvoie toujours data.datas
+        
+        // Stockage des informations utilisateur
+        localStorage.setItem("jwtToken", data.token); // JWT pour les appels API sécurisés
+        localStorage.setItem("token", userData.token); // basicToken ou admin token (pour vérification côté client)
+        localStorage.setItem("id", userData.id);
+        localStorage.setItem("lastname", userData.lastname);
+        localStorage.setItem("firstname", userData.firstname);
+        localStorage.setItem("email", userData.email);
+        localStorage.setItem("role", userData.role);
+
+        // Vérification du statut du compte
+        if (userData.status === false) {
+          alert("Votre compte est désactivé, veuillez contacter l'administrateur.");
+          navigate('/contact');
+          return;
         }
-        // Réinitialisation des champs
+
+        // Redirection selon le rôle
+        if (userData.role === 'ROLE_ADMIN' && userData.token === token) {
+          alert("Vous allez être redirigé vers la page admin.");
+          window.location.href = '/admin';
+        } else if (userData.role === 'ROLE_USER' && userData.token === 'basicToken') {
+          alert("Vous allez être redirigé vers la page de votre profil.");
+          window.location.href = '/profil';
+        } else {
+          alert("Connexion réussie !");
+          window.location.href = '/profil';
+        }
+      } else {
+        // Gestion des erreurs
+        const errorMessage = data.message || 'Une erreur est survenue';
+        
+        if (errorMessage.includes('Identifiants invalides') || errorMessage.includes('invalide')) {
+          alert("Email ou mot de passe incorrect.");
+        } else if (errorMessage.includes('désactivé') || errorMessage.includes('disabled')) {
+          alert("Votre compte est désactivé, veuillez contacter l'administrateur.");
+          navigate('/contact');
+        } else if (errorMessage.includes('verrouillé') || errorMessage.includes('locked')) {
+          alert(errorMessage); // Affiche le message de verrouillage avec le temps restant
+        } else {
+          alert(errorMessage);
+        }
+
+        // Réinitialisation du mot de passe uniquement
+        setPassword('');
       }
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+      alert("Erreur de connexion au serveur. Veuillez réessayer.");
+      setPassword('');
+    }
   };
 
   return (

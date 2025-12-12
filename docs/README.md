@@ -2,15 +2,45 @@
 
 ## 📋 Vue d'ensemble
 
-Ce dossier contient toute la documentation technique et de conception du projet CinéManga, une plateforme de gestion de médias développée dans le cadre d'un Master en Développement Informatique.
+Ce dossier contient toute la documentation de conception du projet CinéManga, une plateforme de gestion de médias de type Allociné permettant aux utilisateurs de consulter des informations sur des films, séries et mangas, de gérer leurs favoris, et aux administrateurs de gérer le contenu.
 
-## 🗂️ Structure de la Documentation
+### 🏗️ Architecture Technique
+- **Backend** : Symfony 7.1 + PHP 8.2
+- **Frontend** : React 18.3 + React Router  
+- **Base de données** : MySQL 8.0
+- **Authentification** : JWT (LexikJWTAuthenticationBundle)
+- **Conteneurisation** : Docker + Docker Compose
+- **Reverse Proxy** : Nginx
+
+## 🎯 Diagrammes Créés - Synthèse Complète
+
+Cette documentation contient **12 diagrammes de conception complets**, générés par rétro-ingénierie du code Symfony/React existant :
+
+### ✅ Analyse Fonctionnelle
+- **1 diagramme de cas d'utilisation** - 3 acteurs, 30+ fonctionnalités identifiées
+
+### ✅ Architecture et Conception  
+- **1 diagramme de classes** - Entités, contrôleurs, repositories, interfaces
+- **1 diagramme d'architecture** - Infrastructure Docker, couches applicatives, sécurité JWT
+
+### ✅ Comportements Dynamiques
+- **6 diagrammes de séquence** - Couvrant tous les processus métier critiques
+- **1 diagramme d'états** - Cycle de vie des utilisateurs et transitions
+
+### ✅ Données et Interfaces
+- **1 MCD + 1 MLD** - Modélisation complète base de données MySQL
+- **1 diagramme de wireframes** - Interfaces utilisateur et admin
+
+> **Total : 12 diagrammes de conception professionnels cohérents avec l'implémentation**
+
+---
 
 ### 📚 Documentation Générale
-- **README.md** (racine) - Guide d'installation et présentation du projet
-- **TECHNICAL_DOCUMENTATION.md** - Documentation technique complète
+- **README.md** (ce fichier) - Index complet de la documentation de conception
+- Les diagrammes sont au format PlantUML (.puml) pour une maintenance facilitée
+- Documentation générée par rétro-ingénierie du code existant pour assurer la cohérence
 
-### 📊 Diagrammes de Conception
+## �️ Détail des Diagrammes de Conception
 
 #### 🎯 Analyse Fonctionnelle
 - **usecase-diagram.puml** - Diagramme de cas d'utilisation
@@ -32,11 +62,17 @@ Ce dossier contient toute la documentation technique et de conception du projet 
   - Services externes et monitoring
 
 #### 📈 Diagrammes de Séquence
-- **sequence-login.puml** - Processus de connexion utilisateur
-- **sequence-register.puml** - Processus d'inscription
-- **sequence-favorites.puml** - Ajout aux favoris
-- **sequence-admin.puml** - Opérations d'administration
-- **sequence-contact.puml** - Système de contact
+- **sequence-login.puml** - Processus de connexion utilisateur avec JWT
+- **sequence-register.puml** - Processus d'inscription avec validation sécurisée
+- **sequence-favorites.puml** - Ajout/suppression favoris (relation many-to-many)
+- **sequence-admin.puml** - Opérations d'administration avec double authentification
+- **sequence-contact.puml** - Système de contact public sans authentification
+
+#### 🔄 États et Cycles de Vie
+- **state-user.puml** - États et transitions des comptes utilisateur
+  - Cycle de vie des comptes (création, activation, suspension)
+  - Transitions entre rôles (user, admin)
+  - Gestion des états de compte
 
 #### 💾 Modélisation des Données
 - **mcd.puml** - Modèle Conceptuel de Données
@@ -50,10 +86,13 @@ Ce dossier contient toute la documentation technique et de conception du projet 
   - Scripts de création recommandés
 
 #### 🖼️ Interface Utilisateur
-- **wireframes.puml** - Maquettes fonctionnelles
-  - Page d'accueil et navigation
-  - Interfaces utilisateur et admin
-  - Formulaires et interactions
+- **wireframes.puml** - Maquettes fonctionnelles complètes
+  - Page d'accueil avec catalogue de médias
+  - Détail des médias et système de favoris
+  - Interfaces d'authentification (connexion/inscription)
+  - Profil utilisateur et gestion des favoris
+  - Interface d'administration (CRUD médias/utilisateurs)
+  - Version mobile responsive
 
 ## 🛠️ Outils Recommandés
 
@@ -82,27 +121,27 @@ java -jar plantuml.jar -tsvg docs/diagrams/
 ## 📖 Guide de Lecture
 
 ### 🔰 Pour les Développeurs
-1. **README.md** - Installation et démarrage rapide
-2. **architecture.puml** - Compréhension globale du système
-3. **class-diagram.puml** - Structure du code
-4. **TECHNICAL_DOCUMENTATION.md** - Référence complète
+1. **architecture.puml** - Compréhension globale du système Docker/Symfony/React
+2. **class-diagram.puml** - Structure du code (entités, contrôleurs, repositories)
+3. **sequence-*.puml** - Implémentation des processus métier avec JWT
+4. **mld.puml** - Structure base de données MySQL optimisée
 
-### 👨‍💼 Pour les Chefs de Projet
-1. **usecase-diagram.puml** - Fonctionnalités et acteurs
-2. **wireframes.puml** - Interface utilisateur
-3. **sequence-*.puml** - Processus métier
-4. **README.md** - Vue d'ensemble du projet
+### 👨‍💼 Pour les Chefs de Projet  
+1. **usecase-diagram.puml** - Fonctionnalités complètes (30+ cas d'usage identifiés)
+2. **wireframes.puml** - Interfaces utilisateur et admin déjà implémentées
+3. **sequence-*.puml** - Processus métier critiques (auth, favoris, admin, contact)
+4. Ce **README.md** - Vue d'ensemble de la plateforme CinéManga
 
 ### 🏗️ Pour les Architectes
-1. **architecture.puml** - Architecture technique
-2. **mcd.puml** / **mld.puml** - Modélisation des données
-3. **class-diagram.puml** - Design patterns utilisés
-4. **TECHNICAL_DOCUMENTATION.md** - Choix techniques
+1. **architecture.puml** - Architecture Docker multi-container avec nginx
+2. **mcd.puml** / **mld.puml** - Modélisation MySQL avec 4 entités principales  
+3. **class-diagram.puml** - Patterns Symfony (Repository, Controller, Entity)
+4. **state-user.puml** - Gestion des états utilisateur et rôles
 
 ### 🎨 Pour les Designers UX/UI
-1. **wireframes.puml** - Maquettes fonctionnelles
-2. **usecase-diagram.puml** - Parcours utilisateur
-3. **sequence-*.puml** - Interactions et flux
+1. **wireframes.puml** - Maquettes complètes (accueil, détail, admin, mobile)
+2. **usecase-diagram.puml** - Parcours utilisateur type Allociné
+3. **sequence-*.puml** - Flux d'interaction détaillés (login, favoris, contact)
 
 ## 🔄 Processus de Mise à Jour
 
@@ -189,5 +228,6 @@ Pour contribuer à la documentation :
 
 ---
 
-*Index maintenu par l'équipe de développement CinéManga*  
-*Dernière mise à jour : 29 septembre 2025*
+*Documentation de conception CinéManga - Générée par rétro-ingénierie du code Symfony/React*  
+*12 diagrammes PlantUML complets et cohérents avec l'implémentation existante*  
+*Dernière mise à jour : $(date '+%d %B %Y')*

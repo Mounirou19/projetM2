@@ -187,6 +187,36 @@ class AdminController extends AbstractController
         return new JsonResponse($datas, 200);
     }
 
+    #[Route('/admin/profils', name: 'app_admin_profils_get')]
+    public function getProfils(Request $request): JsonResponse
+    {
+        if (!$this->isAuthorized($request)) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+        
+        $data = $request->query->get('infos');
+        $d = explode(',', $data);
+
+        if(!isset($d[0]) || !isset($d[1])){
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }else if (!('ROLE_ADMIN' == $d[0]) && !('d@t@ventureprojetM2123$' == $d[1])) {
+            return new JsonResponse(['error' => 'Accès interdit'], 403);
+        }
+
+        $profils = $this->entityManager->getRepository(Profils::class)->findAll();
+
+        $datas = [];
+        foreach ($profils as $profil) {
+            $datas[] = [
+                'id' => $profil->getId(),
+                'id_user' => $profil->getIdUser(),
+                'id_media' => $profil->getIdMedia(),
+            ];
+        }
+
+        return new JsonResponse($datas, 200);
+    }
+
     #[Route('/admin/user/create', name: 'app_create_user', methods: ['POST'])]
     public function createUser(Request $request): JsonResponse
     {
