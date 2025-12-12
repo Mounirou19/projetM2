@@ -11,6 +11,7 @@
 .env
 /view/node_modules/
 /docss/
+/img_pour_le_dossier/
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
