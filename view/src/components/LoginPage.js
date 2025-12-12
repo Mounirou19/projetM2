@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import './css/Auth.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const recaptchaRef = useRef();
 
   const navigate = useNavigate();
   const token = process.env.REACT_APP_TOKEN;
@@ -14,11 +17,17 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Validation du captcha
+    if (!captchaToken) {
+      alert('Veuillez valider le captcha');
+      return;
+    }
+
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, captchaToken }),
       });
 
       const data = await response.json();
@@ -71,13 +80,17 @@ const Login = () => {
           alert(errorMessage);
         }
 
-        // Réinitialisation du mot de passe uniquement
+        // Réinitialisation du mot de passe et captcha
         setPassword('');
+        setCaptchaToken('');
+        recaptchaRef.current?.reset();
       }
     } catch (error) {
       console.error('Erreur de connexion:', error);
       alert("Erreur de connexion au serveur. Veuillez réessayer.");
       setPassword('');
+      setCaptchaToken('');
+      recaptchaRef.current?.reset();
     }
   };
 
@@ -103,7 +116,17 @@ const Login = () => {
           required
         />
 
-        <button type="submit">Se connecter</button>
+        {/* Google reCAPTCHA */}
+        <div style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+            onChange={(token) => setCaptchaToken(token)}
+            onExpired={() => setCaptchaToken('')}
+          />
+        </div>
+
+        <button type="submit" disabled={!captchaToken}>Se connecter</button>
       </form>
       <p className="switch-auth">
         Pas encore de compte ? <a href="/register">Inscrivez-vous ici</a>.

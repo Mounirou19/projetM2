@@ -171,6 +171,23 @@ class AuthController extends AbstractController
             ], 400);
         }
 
+        // Vérification du captcha (Google reCAPTCHA v2)
+        if (empty($data['captchaToken'])) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Veuillez valider le captcha'
+            ], 400);
+        }
+
+        $captchaValid = $this->verifyCaptcha($data['captchaToken'], $clientIp);
+        if (!$captchaValid) {
+            $this->logAuditEvent('LOGIN_FAILED_CAPTCHA_INVALID', null, $clientIp, $data['email']);
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Captcha invalide. Veuillez réessayer.'
+            ], 403);
+        }
+
         // Récupération de l'utilisateur
         $user = $this->entityManager->getRepository(Users::class)
             ->findOneBy(['email' => $data['email']]);
@@ -420,5 +437,56 @@ class AuthController extends AbstractController
     public function protected(): JsonResponse
     {
         return new JsonResponse(['message' => 'Accès autorisé'], 200);
+    }
+
+    /**
+     * Vérification du captcha Google reCAPTCHA v2
+     * 
+     * @param string $token Token reCAPTCHA du client
+     * @param string $clientIp IP du client
+     * @return bool true si le captcha est valide
+     */
+    private function verifyCaptcha(string $token, string $clientIp): bool
+    {
+        $secretKey = $_ENV['RECAPTCHA_SECRET_KEY'] ?? '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'; // Clé de test par défaut
+        
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        
+        $data = [
+            'secret' => $secretKey,
+            'response' => $token,
+            'remoteip' => $clientIp
+        ];
+
+        // Appel à l'API Google reCAPTCHA
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            ]
+        ];
+        
+        $context = stream_context_create($options);
+        $response = @file_get_contents($verifyUrl, false, $context);
+        
+        if ($response === false) {
+            $this->logger->error('CAPTCHA_VERIFICATION_FAILED', [
+                'error' => 'Unable to connect to reCAPTCHA API'
+            ]);
+            return false;
+        }
+
+        $responseData = json_decode($response, true);
+        
+        // Log du résultat pour audit
+        if (!$responseData['success']) {
+            $this->logger->warning('CAPTCHA_VALIDATION_FAILED', [
+                'error_codes' => $responseData['error-codes'] ?? [],
+                'client_ip' => $clientIp
+            ]);
+        }
+
+        return $responseData['success'] ?? false;
     }
 }
