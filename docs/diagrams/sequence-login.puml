@@ -1,67 +1,158 @@
-@startuml Séquence Connexion - CinéManga
+@startuml Sequence-Login-CineManga@startuml Séquence Connexion - CinéManga
 
 !theme aws-orange
+
+title Séquence de Connexion Utilisateur - CinéManga!theme aws-orange
+
 title Diagramme de Séquence - Connexion Utilisateur
 
 actor "Utilisateur" as user
 participant "Frontend\n(React)" as frontend
+participant "API Gateway\n(Nginx)" as NG
+participant "React\nLoginPage" as RP
 participant "AuthController" as auth
+participant "EntityManager" as EM
 participant "UsersRepository" as repo
-participant "Database\n(MySQL)" as db
-participant "JWTManager" as jwt
+
+participant "UsersRepository" as URparticipant "Database\n(MySQL)" as db
+
+participant "Base de Données" as DBparticipant "JWTManager" as jwt
+
+participant "JWTManager" as JWT
 
 user -> frontend : Saisit email/password
-frontend -> frontend : Validation côté client
-frontend -> auth : POST /login\n{email, password}
+
+' === SÉQUENCE DE CONNEXION ===frontend -> frontend : Validation côté client
+
+U -> RP: Saisit email/passwordfrontend -> auth : POST /login\n{email, password}
+
+activate RP
 
 activate auth
-auth -> auth : Décode les données JSON
-auth -> repo : findOneBy(['email' => email])
 
-activate repo
-repo -> db : SELECT * FROM users\nWHERE email = ?
+RP -> RP: Validation côté clientauth -> auth : Décode les données JSON
+
+note right: Vérification format email\nMot de passe non videauth -> repo : findOneBy(['email' => email])
+
+
+
+RP -> NG: POST /login\n{email, password}activate repo
+
+activate NGrepo -> db : SELECT * FROM users\nWHERE email = ?
+
 activate db
-db --> repo : Résultat utilisateur
-deactivate db
+
+NG -> AC: Route vers AuthControllerdb --> repo : Résultat utilisateur
+
+activate ACdeactivate db
+
 repo --> auth : User entity ou null
-deactivate repo
+
+AC -> AC: Validation des donnéesdeactivate repo
+
+note right: Assert\Collection\nContraintes email/password
 
 alt Utilisateur trouvé
-    auth -> auth : password_verify(password, user.password)
-    
+
+AC -> EM: getRepository(Users::class)    auth -> auth : password_verify(password, user.password)
+
+activate EM    
+
     alt Mot de passe correct
-        auth -> jwt : create(user)
-        activate jwt
+
+EM -> UR: findOneBy(['email' => email])        auth -> jwt : create(user)
+
+activate UR        activate jwt
+
         jwt --> auth : JWT Token
-        deactivate jwt
-        
+
+UR -> DB: SELECT * FROM users\nWHERE email = ?        deactivate jwt
+
+activate DB        
+
         auth --> frontend : JsonResponse\n{status: 'success',\n token: 'jwt_token',\n datas: user_info}
-        frontend -> frontend : Stockage token\n(localStorage)
-        frontend -> frontend : Redirection selon rôle
-        frontend --> user : Connexion réussie
-        
-    else Mot de passe incorrect
-        auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid credentials'}
+
+alt Utilisateur trouvé        frontend -> frontend : Stockage token\n(localStorage)
+
+    DB --> UR: Retourne données utilisateur        frontend -> frontend : Redirection selon rôle
+
+    deactivate DB        frontend --> user : Connexion réussie
+
+            
+
+    UR --> EM: Objet Users    else Mot de passe incorrect
+
+    deactivate UR        auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid credentials'}
+
+            frontend --> user : Erreur de connexion
+
+    EM --> AC: Utilisateur trouvé    end
+
+    deactivate EM    
+
+    else Utilisateur non trouvé
+
+    AC -> AC: password_verify(password, user.password)    auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid credentials'}
+
         frontend --> user : Erreur de connexion
+
+    alt Mot de passe valideend
+
+        AC -> JWT: create(user)
+
+        activate JWTdeactivate auth
+
+        
+
+        JWT --> AC: Token JWT générénote right of auth
+
+        deactivate JWT  Le contrôleur ne révèle jamais
+
+          si c'est l'email ou le mot de passe
+
+        AC -> AC: Prépare réponse avec données utilisateur  qui est incorrect (sécurité)
+
+        note right: ID, nom, email, rôle\nToken admin si ROLE_ADMINend note
+
+        
+
+        AC --> NG: JsonResponse\n{status: success, token, datas}note right of jwt
+
+        deactivate AC  Le token JWT contient les informations
+
+          utilisateur encodées et signées
+
+        NG --> RP: 200 OK + Données utilisateur  avec une durée de vie limitée
+
+        deactivate NGend note
+
+        
+
+        RP -> RP: Stockage localStorage@enduml
+
+        note right: jwtToken, user data\nid, firstname, lastname, role
+        
+        RP --> U: Redirection selon rôle
+        note right: /admin si ROLE_ADMIN\n/profil si ROLE_USER
+        deactivate RP
+        
+    else Mot de passe invalide
+        AC --> NG: JsonResponse\n{status: error, message: Invalid credentials}
+        NG --> RP: 403 Forbidden
+        RP --> U: Message d'erreur
     end
     
 else Utilisateur non trouvé
-    auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid credentials'}
-    frontend --> user : Erreur de connexion
+    DB --> UR: Aucun résultat
+    UR --> EM: null
+    EM --> AC: null
+    
+    AC --> NG: JsonResponse\n{status: error, message: Invalid credentials}
+    NG --> RP: 403 Forbidden
+    RP --> U: Message d'erreur
 end
 
-deactivate auth
-
-note right of auth
-  Le contrôleur ne révèle jamais
-  si c'est l'email ou le mot de passe
-  qui est incorrect (sécurité)
-end note
-
-note right of jwt
-  Le token JWT contient les informations
-  utilisateur encodées et signées
-  avec une durée de vie limitée
-end note
+' === NOTES ===
+note over U, JWT: Authentification sécurisée avec JWT\nHachage bcrypt pour les mots de passe
 
 @enduml

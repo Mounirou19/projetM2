@@ -1,120 +1,242 @@
-@startuml Diagramme de Cas d'Utilisation - CinéManga
+@startuml UseCase-CineManga@startuml Diagramme de Cas d'Utilisation - CinéManga
 
 !theme aws-orange
+
+title Diagramme de Cas d'Utilisation - CinéManga!theme aws-orange
+
 title Diagramme de Cas d'Utilisation - Plateforme CinéManga
 
+left to right direction
+
 ' Définition des acteurs
+
+' === ACTEURS ===
 actor "Visiteur" as visitor
 actor "Utilisateur\nConnecté" as user
 actor "Administrateur" as admin
 
+actor Administrateur as A
+
 ' Package système
-package "Système CinéManga" {
-    
-    ' Cas d'utilisation publics
-    usecase "Consulter les médias" as UC1
-    usecase "Rechercher un média" as UC2
-    usecase "Voir détails média" as UC3
-    usecase "S'inscrire" as UC4
-    usecase "Se connecter" as UC5
-    usecase "Contacter l'équipe" as UC6
-    
-    ' Cas d'utilisation utilisateur connecté
-    usecase "Gérer son profil" as UC7
-    usecase "Ajouter aux favoris" as UC8
-    usecase "Retirer des favoris" as UC9
-    usecase "Consulter ses favoris" as UC10
-    usecase "Noter un média" as UC11
-    usecase "Se déconnecter" as UC12
-    
-    ' Cas d'utilisation administrateur
-    usecase "Accéder au dashboard" as UC13
-    usecase "Gérer les utilisateurs" as UC14
-    usecase "Créer un utilisateur" as UC15
-    usecase "Modifier un utilisateur" as UC16
-    usecase "Désactiver un utilisateur" as UC17
-    usecase "Gérer les médias" as UC18
-    usecase "Créer un média" as UC19
-    usecase "Modifier un média" as UC20
-    usecase "Supprimer un média" as UC21
-    usecase "Consulter les messages" as UC22
-    usecase "Répondre aux contacts" as UC23
-    usecase "Voir les statistiques" as UC24
-}
 
-' Relations Visiteur
-visitor --> UC1
-visitor --> UC2
-visitor --> UC3
-visitor --> UC4
-visitor --> UC5
-visitor --> UC6
+' Relation d'héritagepackage "Système CinéManga" {
 
-' Relations Utilisateur connecté
-user --> UC1
-user --> UC2
-user --> UC3
-user --> UC7
-user --> UC8
-user --> UC9
-user --> UC10
-user --> UC11
-user --> UC12
-user --> UC6
+user --|> visitor
+admin --|> user
 
-' Relations Administrateur (hérite de User)
-admin --> UC1
-admin --> UC2
-admin --> UC3
-admin --> UC7
-admin --> UC8
-admin --> UC9
-admin --> UC10
+' Cas d'utilisation publics
+usecase "Consulter les médias" as UC1
+
+' === SYSTÈME ===    usecase "Rechercher un média" as UC2
+
+rectangle "Système CinéManga" {    usecase "Voir détails média" as UC3
+
+      usecase "S'inscrire" as UC4
+
+  ' === CAS D'UTILISATION VISITEUR ===    usecase "Se connecter" as UC5
+
+  package "Gestion Publique" {    usecase "Contacter l'équipe" as UC6
+
+    usecase (Consulter catalogue médias) as UC1    
+
+    usecase (Voir détails média) as UC2    ' Cas d'utilisation utilisateur connecté
+
+    usecase (S'inscrire) as UC3    usecase "Gérer son profil" as UC7
+
+    usecase (Se connecter) as UC4    usecase "Ajouter aux favoris" as UC8
+
+    usecase (Envoyer message contact) as UC5    usecase "Retirer des favoris" as UC9
+
+    usecase (Consulter page À propos) as UC6    usecase "Consulter ses favoris" as UC10
+
+  }    usecase "Noter un média" as UC11
+
+      usecase "Se déconnecter" as UC12
+
+  ' === CAS D'UTILISATION UTILISATEUR ===    
+
+  package "Gestion Profil Utilisateur" {    ' Cas d'utilisation administrateur
+
+    usecase (Gérer profil) as UC7    usecase "Accéder au dashboard" as UC13
+
+    usecase (Modifier informations personnelles) as UC8    usecase "Gérer les utilisateurs" as UC14
+
+    usecase (Supprimer compte) as UC9    usecase "Créer un utilisateur" as UC15
+
+    usecase (Se déconnecter) as UC10    usecase "Modifier un utilisateur" as UC16
+
+  }    usecase "Désactiver un utilisateur" as UC17
+
+      usecase "Gérer les médias" as UC18
+
+  package "Gestion Favoris" {    usecase "Créer un média" as UC19
+
+    usecase (Ajouter média aux favoris) as UC11    usecase "Modifier un média" as UC20
+
+    usecase (Retirer média des favoris) as UC12    usecase "Supprimer un média" as UC21
+
+    usecase (Consulter liste favoris) as UC13    usecase "Consulter les messages" as UC22
+
+    usecase (Vérifier statut favori) as UC14    usecase "Répondre aux contacts" as UC23
+
+  }    usecase "Voir les statistiques" as UC24
+
+  }
+
+  ' === CAS D'UTILISATION ADMINISTRATEUR ===
+
+  package "Administration Médias" {' Relations Visiteur
+
+    usecase (Créer média) as UC15visitor --> UC1
+
+    usecase (Modifier média) as UC16visitor --> UC2
+
+    usecase (Supprimer média) as UC17visitor --> UC3
+
+    usecase (Réactiver média) as UC18visitor --> UC4
+
+    usecase (Consulter tous médias) as UC19visitor --> UC5
+
+  }visitor --> UC6
+
+  
+
+  package "Administration Utilisateurs" {' Relations Utilisateur connecté
+
+    usecase (Créer utilisateur) as UC20user --> UC1
+
+    usecase (Modifier utilisateur) as UC21user --> UC2
+
+    usecase (Désactiver utilisateur) as UC22user --> UC3
+
+    usecase (Réactiver utilisateur) as UC23user --> UC7
+
+    usecase (Supprimer définitivement utilisateur) as UC24user --> UC8
+
+    usecase (Consulter tous utilisateurs) as UC25user --> UC9
+
+  }user --> UC10
+
+  user --> UC11
+
+  package "Administration Contacts" {user --> UC12
+
+    usecase (Consulter messages contact) as UC26user --> UC6
+
+    usecase (Marquer message comme lu) as UC27
+
+    usecase (Supprimer message contact) as UC28' Relations Administrateur (hérite de User)
+
+  }admin --> UC1
+
+  admin --> UC2
+
+  package "Tableau de Bord" {admin --> UC3
+
+    usecase (Consulter tableau de bord) as UC29admin --> UC7
+
+    usecase (Voir statistiques globales) as UC30admin --> UC8
+
+  }admin --> UC9
+
+}admin --> UC10
+
 admin --> UC11
-admin --> UC12
-admin --> UC6
-admin --> UC13
-admin --> UC14
-admin --> UC15
-admin --> UC16
-admin --> UC17
+
+' === RELATIONS VISITEUR ===admin --> UC12
+
+V --> UC1admin --> UC6
+
+V --> UC2admin --> UC13
+
+V --> UC3admin --> UC14
+
+V --> UC4admin --> UC15
+
+V --> UC5admin --> UC16
+
+V --> UC6admin --> UC17
+
 admin --> UC18
-admin --> UC19
-admin --> UC20
-admin --> UC21
-admin --> UC22
-admin --> UC23
-admin --> UC24
 
-' Relations d'inclusion
-UC14 ..> UC15 : include
+' === RELATIONS UTILISATEUR ===admin --> UC19
+
+U --> UC7admin --> UC20
+
+U --> UC8admin --> UC21
+
+U --> UC9admin --> UC22
+
+U --> UC10admin --> UC23
+
+U --> UC11admin --> UC24
+
+U --> UC12
+
+U --> UC13' Relations d'inclusion
+
+U --> UC14UC14 ..> UC15 : include
+
 UC14 ..> UC16 : include
-UC14 ..> UC17 : include
 
-UC18 ..> UC19 : include
-UC18 ..> UC20 : include
-UC18 ..> UC21 : include
+' === RELATIONS ADMINISTRATEUR ===UC14 ..> UC17 : include
 
-' Relations d'extension
-UC11 ..> UC3 : extend
-UC8 ..> UC3 : extend
+A --> UC15
 
-note right of UC11
-  La notation n'est possible
-  que sur la page de détail
-  d'un média
-end note
+A --> UC16UC18 ..> UC19 : include
 
-note right of UC8
+A --> UC17UC18 ..> UC20 : include
+
+A --> UC18UC18 ..> UC21 : include
+
+A --> UC19
+
+A --> UC20' Relations d'extension
+
+A --> UC21UC11 ..> UC3 : extend
+
+A --> UC22UC8 ..> UC3 : extend
+
+A --> UC23
+
+A --> UC24note right of UC11
+
+A --> UC25  La notation n'est possible
+
+A --> UC26  que sur la page de détail
+
+A --> UC27  d'un média
+
+A --> UC28end note
+
+A --> UC29
+
+A --> UC30note right of UC8
+
   L'ajout aux favoris se fait
-  depuis la page de détail
-  du média
-end note
 
-note bottom of admin
+' === RELATIONS INCLUDE/EXTEND ===  depuis la page de détail
+
+UC7 ..> UC8 : <<include>>  du média
+
+UC11 ..> UC14 : <<include>>end note
+
+UC12 ..> UC14 : <<include>>
+
+UC29 ..> UC30 : <<include>>note bottom of admin
+
   L'administrateur hérite
-  de tous les droits utilisateur
-  plus les fonctions d'administration
-end note
+
+' === NOTES ===  de tous les droits utilisateur
+
+note right of UC3 : "Validation email unique\nHachage mot de passe"  plus les fonctions d'administration
+
+note right of UC4 : "Génération token JWT\nVérification credentials"end note
+
+note right of UC11 : "Contrôle doublon favori"
+
+note right of UC15 : "Validation titre unique"@enduml
+
+note right of UC29 : "Accès avec double authentification"
 
 @enduml

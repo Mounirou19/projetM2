@@ -1,91 +1,252 @@
-@startuml Séquence Favoris - CinéManga
+@startuml Sequence-Favorites-CineManga@startuml Séquence Favoris - CinéManga
 
 !theme aws-orange
+
+title Séquence de Gestion des Favoris - CinéManga!theme aws-orange
+
 title Diagramme de Séquence - Ajout aux Favoris
 
 actor "Utilisateur\nConnecté" as user
 participant "Frontend\n(React)" as frontend
+participant "API Gateway\n(Nginx)" as NG
+participant "React\nOneMediaPage" as OMP
 participant "ProfilController" as profil
+participant "EntityManager" as EM
 participant "UsersRepository" as userRepo
-participant "MediasRepository" as mediaRepo
-participant "ProfilsRepository" as profilRepo
-participant "Database\n(MySQL)" as db
 
-user -> frontend : Clique "Ajouter aux favoris"\nsur un média
-frontend -> frontend : Vérification token JWT
-frontend -> profil : GET /profil/create/{userId}/{mediaId}\n+ paramètres d'autorisation
+participant "ProfilsRepository" as PRparticipant "MediasRepository" as mediaRepo
 
-activate profil
-profil -> profil : Vérification autorisation\n(ROLE_USER dans paramètres)
+participant "MediasRepository" as MRparticipant "ProfilsRepository" as profilRepo
 
-alt Autorisation valide
-    ' Vérification existence utilisateur
+participant "Base de Données" as DBparticipant "Database\n(MySQL)" as db
+
+
+
+' === VÉRIFICATION STATUT FAVORI ===user -> frontend : Clique "Ajouter aux favoris"\nsur un média
+
+U -> OMP: Consulte page médiafrontend -> frontend : Vérification token JWT
+
+activate OMPfrontend -> profil : GET /profil/create/{userId}/{mediaId}\n+ paramètres d'autorisation
+
+
+
+OMP -> NG: GET /profil/get/{userId}/{mediaId}?infos=ROLE_USER,token\nAuthorization: Bearer JWTactivate profil
+
+activate NGprofil -> profil : Vérification autorisation\n(ROLE_USER dans paramètres)
+
+
+
+NG -> PC: getProfil(userId, mediaId)alt Autorisation valide
+
+activate PC    ' Vérification existence utilisateur
+
     profil -> userRepo : find(userId)
-    activate userRepo
-    userRepo -> db : SELECT * FROM users\nWHERE id = ?
+
+PC -> PC: Vérification autorisation    activate userRepo
+
+note right: Contrôle ROLE_USER\nValidation token    userRepo -> db : SELECT * FROM users\nWHERE id = ?
+
     activate db
-    db --> userRepo : User data
-    deactivate db
+
+PC -> EM: getRepository(Profils::class)    db --> userRepo : User data
+
+activate EM    deactivate db
+
     userRepo --> profil : User entity
-    deactivate userRepo
-    
+
+EM -> PR: findBy(['id_user' => userId, 'id_media' => mediaId])    deactivate userRepo
+
+activate PR    
+
     alt Utilisateur trouvé
-        ' Vérification si pas déjà en favoris
-        profil -> profilRepo : findBy(['id_user' => userId,\n'id_media' => mediaId])
+
+PR -> DB: SELECT * FROM profils\nWHERE id_user = ? AND id_media = ?        ' Vérification si pas déjà en favoris
+
+activate DB        profil -> profilRepo : findBy(['id_user' => userId,\n'id_media' => mediaId])
+
         activate profilRepo
-        profilRepo -> db : SELECT * FROM profils\nWHERE id_user = ? AND id_media = ?
-        activate db
-        db --> profilRepo : Résultat existant ou vide
-        deactivate db
-        profilRepo --> profil : Profil entity ou null
-        deactivate profilRepo
-        
-        alt Pas encore en favoris
-            ' Création du profil favori
-            profil -> profil : new Profils()
-            profil -> profil : setIdUser(userId)
-            profil -> profil : setIdMedia(mediaId)
-            
-            ' Sauvegarde
-            profil -> profilRepo : persist(profil)
-            profil -> profilRepo : flush()
-            profilRepo -> db : INSERT INTO profils\n(id_user, id_media)
-            activate db
-            db --> profilRepo : ID généré
+
+alt Relation existe (Favori)        profilRepo -> db : SELECT * FROM profils\nWHERE id_user = ? AND id_media = ?
+
+    DB --> PR: Retourne relation        activate db
+
+    deactivate DB        db --> profilRepo : Résultat existant ou vide
+
             deactivate db
+
+    PR --> EM: Objet Profils trouvé        profilRepo --> profil : Profil entity ou null
+
+    deactivate PR        deactivate profilRepo
+
             
-            profil --> frontend : JsonResponse\n{status: 'success',\n message: 'Profil créé'}
-            frontend -> frontend : Mise à jour interface\n(bouton devient "Retirer")
-            frontend --> user : Média ajouté aux favoris
-            
-        else Déjà en favoris
-            profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Déjà en favoris'}
+
+    EM --> PC: Relation trouvée        alt Pas encore en favoris
+
+    deactivate EM            ' Création du profil favori
+
+                profil -> profil : new Profils()
+
+    PC --> NG: JsonResponse(true, 200)            profil -> profil : setIdUser(userId)
+
+    deactivate PC            profil -> profil : setIdMedia(mediaId)
+
+                
+
+    NG --> OMP: 200 OK - Média en favori            ' Sauvegarde
+
+    deactivate NG            profil -> profilRepo : persist(profil)
+
+                profil -> profilRepo : flush()
+
+    OMP -> OMP: Affiche bouton "Retirer des favoris"            profilRepo -> db : INSERT INTO profils\n(id_user, id_media)
+
+            activate db
+
+else Relation n'existe pas            db --> profilRepo : ID généré
+
+    DB --> PR: Aucun résultat            deactivate db
+
+    PR --> EM: null            
+
+    EM --> PC: null            profil --> frontend : JsonResponse\n{status: 'success',\n message: 'Profil créé'}
+
+                frontend -> frontend : Mise à jour interface\n(bouton devient "Retirer")
+
+    PC --> NG: JsonResponse({error: 'Profil non trouvé'}, 404)            frontend --> user : Média ajouté aux favoris
+
+    NG --> OMP: 404 Not Found            
+
+    OMP -> OMP: Affiche bouton "Ajouter aux favoris"        else Déjà en favoris
+
+end            profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Déjà en favoris'}
+
             frontend --> user : Information déjà favori
-        end
-        
+
+' === AJOUT AUX FAVORIS ===        end
+
+U -> OMP: Clique "Ajouter aux favoris"        
+
     else Utilisateur non trouvé
-        profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Utilisateur non trouvé'}
-        frontend --> user : Erreur utilisateur
+
+OMP -> NG: POST /profil/create/{userId}/{mediaId}?infos=ROLE_USER,token\nAuthorization: Bearer JWT        profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Utilisateur non trouvé'}
+
+activate NG        frontend --> user : Erreur utilisateur
+
     end
-    
-else Autorisation invalide
+
+NG -> PC: createProfilForUser(userId, mediaId)    
+
+activate PCelse Autorisation invalide
+
     profil --> frontend : JsonResponse\n{status: 'error',\n message: 'Accès interdit'}
-    frontend --> user : Erreur d'autorisation
-end
+
+PC -> PC: Vérification autorisation    frontend --> user : Erreur d'autorisation
+
+PC -> EM: getRepository(Users::class).find(userId)end
+
+activate EM
 
 deactivate profil
 
-note right of profil
+EM -> DB: SELECT * FROM users WHERE id = ?
+
+activate DBnote right of profil
+
   La vérification d'autorisation
-  s'assure que seul un utilisateur
-  connecté peut ajouter des favoris
+
+DB --> EM: Données utilisateur  s'assure que seul un utilisateur
+
+deactivate DB  connecté peut ajouter des favoris
+
   pour son propre compte
-end note
+
+EM --> PC: Utilisateur valideend note
+
+deactivate EM
 
 note right of profilRepo
-  La table profils fait le lien
+
+PC -> PC: new Profils()\nsetIdUser(userId)\nsetIdMedia(mediaId)  La table profils fait le lien
+
   many-to-many entre users et medias
-  pour gérer les listes personnalisées
-end note
+
+PC -> EM: persist(profil) + flush()  pour gérer les listes personnalisées
+
+activate EMend note
+
+
+
+EM -> DB: INSERT INTO profils\n(id_user, id_media) VALUES (?, ?)@enduml
+
+activate DB
+
+DB --> EM: Insertion réussie
+deactivate DB
+
+EM --> PC: Profil créé
+deactivate EM
+
+PC --> NG: JsonResponse({status: success, message: 'Profil créé'}, 200)
+deactivate PC
+
+NG --> OMP: 200 OK - Favori ajouté
+deactivate NG
+
+OMP -> OMP: Met à jour interface\nBouton devient "Retirer des favoris"
+OMP --> U: Confirmation visuelle
+
+' === SUPPRESSION DES FAVORIS ===
+U -> OMP: Clique "Retirer des favoris"
+
+OMP -> NG: DELETE /profil/delete/{userId}/{mediaId}?infos=ROLE_USER,token\nAuthorization: Bearer JWT
+activate NG
+
+NG -> PC: deleteProfilForUser(userId, mediaId)
+activate PC
+
+PC -> PC: Vérification autorisation
+
+PC -> EM: getRepository(Profils::class)
+activate EM
+
+EM -> PR: findOneBy(['id_user' => userId, 'id_media' => mediaId])
+activate PR
+
+PR -> DB: SELECT * FROM profils\nWHERE id_user = ? AND id_media = ?
+activate DB
+
+DB --> PR: Retourne relation
+deactivate DB
+
+PR --> EM: Objet Profils trouvé
+deactivate PR
+
+EM --> PC: Relation trouvée
+deactivate EM
+
+PC -> EM: remove(profil) + flush()
+activate EM
+
+EM -> DB: DELETE FROM profils\nWHERE id = ?
+activate DB
+
+DB --> EM: Suppression réussie
+deactivate DB
+
+EM --> PC: Profil supprimé
+deactivate EM
+
+PC --> NG: JsonResponse({status: success, message: 'Profil supprimé'}, 200)
+deactivate PC
+
+NG --> OMP: 200 OK - Favori retiré
+deactivate NG
+
+OMP -> OMP: Met à jour interface\nBouton devient "Ajouter aux favoris"
+OMP --> U: Confirmation visuelle
+deactivate OMP
+
+' === NOTES ===
+note over U, DB: Système de favoris avec table de liaison\nContrôle d'accès par JWT et rôle utilisateur
 
 @enduml

@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/RegisterForm.css';
 
 /**
  * Composant RegisterForm - Formulaire d'inscription (présentation uniquement)

@@ -1,86 +1,214 @@
-@startuml Séquence Inscription - CinéManga
+@startuml Sequence-Register-CineManga@startuml Séquence Inscription - CinéManga
 
 !theme aws-orange
+
+title Séquence d'Inscription Utilisateur - CinéManga!theme aws-orange
+
 title Diagramme de Séquence - Inscription Utilisateur
 
 actor "Visiteur" as visitor
 participant "Frontend\n(React)" as frontend
+participant "API Gateway\n(Nginx)" as NG
+participant "React\nRegisterPage" as RP
 participant "AuthController" as auth
 participant "Validator" as validator
-participant "UsersRepository" as repo
-participant "Database\n(MySQL)" as db
+
+participant "EntityManager" as EMparticipant "UsersRepository" as repo
+
+participant "UsersRepository" as URparticipant "Database\n(MySQL)" as db
+
+participant "Base de Données" as DB
 
 visitor -> frontend : Saisit informations\n(nom, prénom, email, password)
-frontend -> frontend : Validation côté client\n(format email, longueur password)
-frontend -> auth : POST /register\n{lastName, firstName, email, password}
 
-activate auth
+' === INSCRIPTION UTILISATEUR ===frontend -> frontend : Validation côté client\n(format email, longueur password)
+
+V -> RP: Remplit formulaire inscriptionfrontend -> auth : POST /register\n{lastName, firstName, email, password}
+
+activate RP
+
+note right of V: lastName, firstName\nemail, passwordactivate auth
+
 auth -> auth : Décode données JSON
 
-' Validation des contraintes
+RP -> RP: Validation côté client
+
+note right: Format email\nLongueur mot de passe\nChamps obligatoires' Validation des contraintes
+
 auth -> validator : validate(data, constraints)
-activate validator
-validator -> validator : Vérifie NotBlank, Email, Length
+
+RP -> NG: POST /register\n{lastName, firstName, email, password}activate validator
+
+activate NGvalidator -> validator : Vérifie NotBlank, Email, Length
+
 validator --> auth : Violations ou OK
-deactivate validator
+
+NG -> AC: register(Request, ValidatorInterface)deactivate validator
+
+activate AC
 
 alt Données valides
-    ' Vérification unicité email
+
+AC -> AC: json_decode(request.getContent())    ' Vérification unicité email
+
     auth -> repo : findOneBy(['email' => email])
-    activate repo
-    repo -> db : SELECT * FROM users\nWHERE email = ?
-    activate db
-    db --> repo : Résultat ou null
+
+' === VALIDATION DONNÉES ===    activate repo
+
+AC -> VAL: Validation avec Assert\Collection    repo -> db : SELECT * FROM users\nWHERE email = ?
+
+activate VAL    activate db
+
+note right of AC: lastName: NotBlank, Length max 255\nfirstName: NotBlank, Length max 255\nemail: NotBlank, Email\npassword: NotBlank, Length min 8    db --> repo : Résultat ou null
+
     deactivate db
-    repo --> auth : User entity ou null
-    deactivate repo
-    
-    alt Email disponible
-        ' Création utilisateur
-        auth -> auth : new Users()
-        auth -> auth : setLastName(data['lastName'])
-        auth -> auth : setFirstName(data['firstName'])
-        auth -> auth : setEmail(data['email'])
-        auth -> auth : password_hash(password, PASSWORD_BCRYPT)
-        auth -> auth : setPassword(hashedPassword)
-        auth -> auth : setRole('ROLE_USER')
-        auth -> auth : setStatus(true)
+
+VAL -> VAL: Validation contraintes    repo --> auth : User entity ou null
+
+alt Validation réussie    deactivate repo
+
+    VAL --> AC: Aucune violation    
+
+    deactivate VAL    alt Email disponible
+
+            ' Création utilisateur
+
+    ' === VÉRIFICATION UNICITÉ EMAIL ===        auth -> auth : new Users()
+
+    AC -> EM: getRepository(Users::class)        auth -> auth : setLastName(data['lastName'])
+
+    activate EM        auth -> auth : setFirstName(data['firstName'])
+
+            auth -> auth : setEmail(data['email'])
+
+    EM -> UR: findOneBy(['email' => email])        auth -> auth : password_hash(password, PASSWORD_BCRYPT)
+
+    activate UR        auth -> auth : setPassword(hashedPassword)
+
+            auth -> auth : setRole('ROLE_USER')
+
+    UR -> DB: SELECT * FROM users WHERE email = ?        auth -> auth : setStatus(true)
+
+    activate DB        
+
+            ' Sauvegarde en base
+
+    alt Email déjà utilisé        auth -> repo : persist(user)
+
+        DB --> UR: Utilisateur existant        auth -> repo : flush()
+
+        deactivate DB        repo -> db : INSERT INTO users...
+
+                activate db
+
+        UR --> EM: Utilisateur trouvé        db --> repo : ID généré
+
+        deactivate UR        deactivate db
+
+                
+
+        EM --> AC: Email non disponible        auth --> frontend : JsonResponse\n{status: 'success',\n message: 'Utilisateur créé'}
+
+        deactivate EM        frontend --> visitor : Confirmation inscription\n+ redirection login
+
+                
+
+        AC --> NG: JsonResponse({status: error, message: 'Utilisateur déjà existant'}, 400)    else Email déjà utilisé
+
+        NG --> RP: 400 Bad Request        auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Utilisateur déjà existant'}
+
+        RP --> V: "Cet email est déjà utilisé"        frontend --> visitor : Erreur email existant
+
+            end
+
+    else Email disponible    
+
+        DB --> UR: Aucun résultatelse Données invalides
+
+        UR --> EM: null    auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid data',\n errors: [violations]}
+
+        EM --> AC: Email disponible    frontend --> visitor : Affichage erreurs\nde validation
+
+        end
+
+        ' === CRÉATION UTILISATEUR ===
+
+        AC -> AC: new Users()deactivate auth
+
         
-        ' Sauvegarde en base
-        auth -> repo : persist(user)
-        auth -> repo : flush()
-        repo -> db : INSERT INTO users...
-        activate db
-        db --> repo : ID généré
-        deactivate db
+
+        AC -> AC: Initialisation utilisateurnote right of auth
+
+        note right: setLastName(lastName)\nsetFirstName(firstName)\nsetEmail(email)\nsetPassword(password_hash(password, PASSWORD_BCRYPT))\nsetRole('ROLE_USER')\nsetStatus(true)  Le mot de passe est immédiatement
+
+          haché avec bcrypt avant stockage.
+
+        AC -> EM: persist(user) + flush()  Aucun mot de passe en clair n'est
+
+        activate EM  conservé dans le système.
+
+        end note
+
+        EM -> DB: INSERT INTO users\n(lastname, firstname, email, password, role, status)\nVALUES (?, ?, ?, ?, 'ROLE_USER', true)
+
+        activate DBnote right of validator
+
+          Les contraintes Symfony permettent
+
+        DB --> EM: Insertion réussie  une validation robuste côté serveur
+
+        deactivate DB  en complément de la validation
+
+          côté client.
+
+        EM --> AC: Utilisateur crééend note
+
+        deactivate EM
+
+        @enduml
+
+        AC --> NG: JsonResponse({status: success, message: 'Utilisateur créé'}, 201)
+        deactivate AC
         
-        auth --> frontend : JsonResponse\n{status: 'success',\n message: 'Utilisateur créé'}
-        frontend --> visitor : Confirmation inscription\n+ redirection login
+        NG --> RP: 201 Created - Inscription réussie
+        deactivate NG
         
-    else Email déjà utilisé
-        auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Utilisateur déjà existant'}
-        frontend --> visitor : Erreur email existant
+        RP -> RP: Affichage confirmation
+        
+        RP -> RP: Redirection automatique
+        note right: Vers page de connexion\nou connexion automatique
+        
+        RP --> V: "Inscription réussie !"
+        deactivate RP
     end
     
-else Données invalides
-    auth --> frontend : JsonResponse\n{status: 'error',\n message: 'Invalid data',\n errors: [violations]}
-    frontend --> visitor : Affichage erreurs\nde validation
+else Validation échouée
+    VAL --> AC: Violations de contraintes
+    deactivate VAL
+    
+    AC -> AC: Formatage erreurs validation
+    
+    AC --> NG: JsonResponse({status: error, violations: [...]}), 400)
+    NG --> RP: 400 Bad Request + Détails erreurs
+    RP --> V: Messages d'erreur spécifiques
 end
 
-deactivate auth
+' === FLOW ALTERNATIF - CONNEXION APRÈS INSCRIPTION ===
+note over V, DB: Optionnel: Connexion automatique\naprès inscription réussie
 
-note right of auth
-  Le mot de passe est immédiatement
-  haché avec bcrypt avant stockage.
-  Aucun mot de passe en clair n'est
-  conservé dans le système.
-end note
+alt Connexion automatique activée
+    RP -> NG: POST /login\n{email, password}
+    note right: Réutilise les credentials\njuste saisis
+    
+    NG -> AC: login(Request, JWTManager)
+    note right: Même processus que\nséquence de connexion
+    
+    AC --> NG: JsonResponse + JWT Token
+    NG --> RP: Utilisateur connecté
+    RP --> V: Redirection vers profil
+end
 
-note right of validator
-  Les contraintes Symfony permettent
-  une validation robuste côté serveur
-  en complément de la validation
-  côté client.
-end note
+' === NOTES ===
+note over V, DB: Inscription sécurisée avec validation\nHachage bcrypt du mot de passe\nVérification unicité email
 
 @enduml
