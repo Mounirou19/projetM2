@@ -1,4 +1,6 @@
 import React from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import '../css/RegisterForm.css';
 
 /**
  * Composant RegisterForm - Formulaire d'inscription (présentation uniquement)
@@ -13,9 +15,12 @@ function RegisterForm({
     loading, 
     successMessage, 
     passwordStrength,
+    captchaToken,
+    recaptchaRef,
     handleChange, 
     handleSubmit,
-    onShowRgpdModal 
+    onShowRgpdModal,
+    onCaptchaChange
 }) {
     return (
         <div className="register-container">
@@ -171,11 +176,21 @@ function RegisterForm({
                         )}
                     </div>
 
+                    {/* Google reCAPTCHA */}
+                    <div style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
+                        <ReCAPTCHA
+                            ref={recaptchaRef}
+                            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+                            onChange={onCaptchaChange}
+                            onExpired={() => onCaptchaChange('')}
+                        />
+                    </div>
+
                     {/* Bouton de soumission */}
                     <button 
                         type="submit" 
                         className="btn-submit"
-                        disabled={loading}
+                        disabled={loading || !captchaToken}
                     >
                         {loading ? (
                             <>

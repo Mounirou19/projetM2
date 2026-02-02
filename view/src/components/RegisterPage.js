@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RegisterForm, { RgpdPolicyModal } from './RegisterForm';
@@ -31,6 +31,8 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [passwordStrength, setPasswordStrength] = useState('');
+    const [captchaToken, setCaptchaToken] = useState('');
+    const recaptchaRef = useRef();
 
     /**
      * Validation du mot de passe en temps réel
@@ -134,6 +136,12 @@ const Register = () => {
             return;
         }
 
+        // Validation du captcha
+        if (!captchaToken) {
+            setErrors({ general: 'Veuillez valider le captcha' });
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -142,7 +150,8 @@ const Register = () => {
                 firstName: formData.firstName,
                 email: formData.email,
                 password: formData.password,
-                rgpdConsent: formData.rgpdConsent
+                rgpdConsent: formData.rgpdConsent,
+                captchaToken: captchaToken
             });
 
             if (response.data.status === 'success') {
@@ -158,6 +167,8 @@ const Register = () => {
                     rgpdConsent: false
                 });
                 setPasswordStrength('');
+                setCaptchaToken('');
+                recaptchaRef.current?.reset();
 
                 // Redirection vers la page de connexion après 2 secondes
                 setTimeout(() => {
@@ -179,6 +190,9 @@ const Register = () => {
                     general: 'Erreur de connexion au serveur. Veuillez réessayer.' 
                 });
             }
+            // Réinitialisation du captcha en cas d'erreur
+            setCaptchaToken('');
+            recaptchaRef.current?.reset();
         } finally {
             setLoading(false);
         }
@@ -192,9 +206,12 @@ const Register = () => {
         loading={loading}
         successMessage={successMessage}
         passwordStrength={passwordStrength}
+        captchaToken={captchaToken}
+        recaptchaRef={recaptchaRef}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         onShowRgpdModal={() => setShowRgpdModal(true)}
+        onCaptchaChange={(token) => setCaptchaToken(token)}
       />
       
       {/* Modal de politique de confidentialité */}

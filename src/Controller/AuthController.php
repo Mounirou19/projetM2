@@ -60,6 +60,23 @@ class AuthController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $clientIp = $request->getClientIp();
 
+        // Vérification du captcha (Google reCAPTCHA v2)
+        if (empty($data['captchaToken'])) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Veuillez valider le captcha'
+            ], 400);
+        }
+
+        $captchaValid = $this->verifyCaptcha($data['captchaToken'], $clientIp);
+        if (!$captchaValid) {
+            $this->logAuditEvent('REGISTER_FAILED_CAPTCHA_INVALID', null, $clientIp, $data['email'] ?? null);
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Captcha invalide. Veuillez réessayer.'
+            ], 403);
+        }
+
         // Validation des données avec consentement RGPD obligatoire
         $constraints = new Assert\Collection([
             'lastName' => [
