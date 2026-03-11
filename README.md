@@ -203,7 +203,7 @@ npm run lint
 ### Logs et Debugging
 - **Logs Symfony** : var/log/
 - **Logs Docker** : docker-compose logs [service]
-- **Notifications** : notifications.log
+- **Notifications** : notifications.txt
 
 ## 🤝 Contribution
 

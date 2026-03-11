@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { showError } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/SeeContact.css';
 
 function SeeContact() {
@@ -16,7 +18,7 @@ function SeeContact() {
   const fetchContact = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/contact/${id}?infos=${infos}`, {
-        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
       });
       
       if (!response.ok) {
@@ -27,7 +29,7 @@ function SeeContact() {
       setContact(data);
     } catch (error) {
       console.error(error);
-      alert("Erreur lors de la récupération du contact");
+      showError("Erreur lors de la récupération du contact");
     }
   };
 

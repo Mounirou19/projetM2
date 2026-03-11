@@ -1,12 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import secureStorage from './utils/secureStorage';
 
 const ProtectedRouteAdmin = ({ children }) => {
-    const t = localStorage.getItem("token"); // Récupère le token du localStorage
-    const r = localStorage.getItem("role"); // Récupère le token du localStorage
+    const userData = secureStorage.getUserData();
+    const isAuth = secureStorage.isAuthenticated();
 
     // Vérifie si l'utilisateur est authentifié
-    if (!t && !r && t !== process.env.REACT_APP_TOKEN && r !== process.env.REACT_APP_ROLE_ADMIN) {
+    if (!isAuth || userData.role !== 'ROLE_ADMIN') {
         alert("Vous n'êtes pas autorisé à accéder à cette page.");
         return <Navigate to="/" replace />; // Redirige vers la page de connexion
     }

@@ -108,7 +108,7 @@ class ContactController extends AbstractController
         $racine = $_SERVER['DOCUMENT_ROOT'];
         // je veux supprimer public de la racine
         $racine = str_replace('public', '', $racine);
-        $filePath = $racine . 'notifications.log';
+        $filePath = $racine . 'notifications.txt';
         $logMessage = "Nouveau message de $name à " . date('Y-m-d H:i:s') . "\n";
         file_put_contents($filePath, $logMessage, FILE_APPEND);
 

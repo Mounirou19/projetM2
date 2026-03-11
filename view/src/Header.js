@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import secureStorage from './utils/secureStorage';
 import './Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const userData = secureStorage.getUserData();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,13 +32,13 @@ const Header = () => {
         <Link to="/media" className="nav-link" onClick={() => setIsMenuOpen(false)}>Médias</Link>
         <Link to="/about" className="nav-link" onClick={() => setIsMenuOpen(false)}>À propos</Link>
         <Link to="/contact" className="nav-link" onClick={() => setIsMenuOpen(false)}>Contact</Link>
-        {localStorage.getItem('role') === process.env.REACT_APP_ROLE_ADMIN && (
+        {userData.role === process.env.REACT_APP_ROLE_ADMIN && (
           <Link to="/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>Admin</Link>
         )}
-        {localStorage.getItem('role') === process.env.REACT_APP_ROLE_USER && (
+        {userData.role === process.env.REACT_APP_ROLE_USER && (
           <Link to="/profil" className="nav-link" onClick={() => setIsMenuOpen(false)}>Mon profil</Link>
         )}
-        {localStorage.getItem('email') ? (
+        {userData.email ? (
           <Link to="/logout" className="nav-link" onClick={() => setIsMenuOpen(false)}>Déconnexion</Link>
         ) : (
           <Link to="/login" className="nav-link" onClick={() => setIsMenuOpen(false)}>Connexion</Link>

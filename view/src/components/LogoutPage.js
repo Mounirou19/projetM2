@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
+import secureStorage from '../utils/secureStorage';
 
 const Logout = () => {
 
   useEffect(() => {
     // Supprime toutes les données du localStorage
-    localStorage.clear();
+    secureStorage.clear();
     // Redirige vers la page de connexion
     setTimeout(() => {
       window.location.href = '/login';

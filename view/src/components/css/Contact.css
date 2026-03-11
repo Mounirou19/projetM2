@@ -1,38 +1,54 @@
+/* ========================================
+   CONTACT PAGE - FORMULAIRE
+   ======================================== */
+
 .contact-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 48px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s ease-out;
   }
   
-  h1 {
-    color: #333;
+  .contact-container h1 {
     text-align: center;
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
   }
   
-  p {
+  .contact-container > p {
     text-align: center;
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 20px;
+    color: #6b7280;
+    font-size: 16px;
+    margin-bottom: 32px;
   }
   
   .contact-info {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border-radius: 16px;
   }
   
   .contact-info h2 {
-    color: #333;
-    margin-bottom: 10px;
+    color: #1f2937;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
   }
   
   .contact-info p {
-    color: #555;
-    font-size: 15px;
-    margin: 5px 0;
+    color: #4b5563;
+    font-size: 16px;
+    margin: 8px 0;
   }
   
   .contact-form {
@@ -40,50 +56,86 @@
     flex-direction: column;
   }
   
-  label {
-    margin-bottom: 5px;
-    color: #444;
+  .contact-form label {
+    margin-bottom: 8px;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
-  input,
-  textarea {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  .contact-form input,
+  .contact-form textarea {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
     font-size: 16px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
   }
   
-  textarea {
+  .contact-form textarea {
     resize: vertical;
-    height: 100px;
+    min-height: 150px;
   }
   
-  button {
-    padding: 10px 15px;
+  .contact-form button {
+    padding: 16px 32px;
     border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
   }
   
-  button:hover {
-    background-color: #0056b3;
+  .contact-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  }
+
+  .contact-form button:active {
+    transform: translateY(0);
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   @media (max-width: 768px) {
     .contact-container {
-      padding: 15px;
+      margin: 20px 10px;
+      padding: 32px 20px;
     }
   
-    h1 {
-      font-size: 24px;
+    .contact-container h1 {
+      font-size: 28px;
+    }
+
+    .contact-info {
+      padding: 20px;
     }
   
-    p {
+    .contact-container > p {
       font-size: 14px;
     }
   }

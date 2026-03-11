@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { showSuccess, showError } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/Profile.css';
 
 const Profile = () => {
-  const id = localStorage.getItem('id');
+  const userData = secureStorage.getUserData();
+  const id = userData.id;
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -12,19 +15,19 @@ const Profile = () => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const infos = [process.env.REACT_APP_ROLE_USER, localStorage.getItem('token')];
+  const infos = [process.env.REACT_APP_ROLE_USER, userData.token];
 
   useEffect(() => {
-    const name = `${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}` || 'John Doe';
-    const email = localStorage.getItem('email') || 'johndoe@example.com';
-    const role = localStorage.getItem('role') ? 'Utilisateur' : 'Pas de rôle';
+    const name = `${userData.firstname} ${userData.lastname}` || 'John Doe';
+    const email = userData.email || 'johndoe@example.com';
+    const role = userData.role ? 'Utilisateur' : 'Pas de rôle';
 
     setUser({ name, email, role });
 
     const fetchFavorites = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/user/${id}?infos=${infos}`, { 
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des médias favoris');
@@ -52,20 +55,20 @@ const Profile = () => {
         
         const response = await fetch(`${process.env.REACT_APP_API_URL}/delete/profil/${id}?infos=${infos}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
         
         if (response.ok) {
-          alert('Profil supprimé avec succès');
-          localStorage.clear();
+          showSuccess('Profil supprimé avec succès');
+          secureStorage.clear();
           window.location.href = '/';
         } else {  
-          alert('Erreur lors de la suppression du profil');
+          showError('Erreur lors de la suppression du profil');
         }
       }
       catch (error) {
         console.error('Erreur lors de la suppression du profil:', error);
-        alert('Erreur lors de la suppression du profil');
+        showError('Erreur lors de la suppression du profil');
       } finally {
         setLoading(false);
       }
@@ -76,18 +79,18 @@ const Profile = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/delete/${mediaId}?infos=${infos}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
       });
 
       if (response.ok) {
-        alert('Favori supprimé avec succès');
+        showSuccess('Favori supprimé avec succès');
         setFavorites(favorites.filter((favorite) => favorite.id_profil !== mediaId));
       } else {
-        alert("Erreur lors de la suppression du favori");
+        showError("Erreur lors de la suppression du favori");
       }
     } catch (error) {
       console.error('Erreur lors de la suppression du favori:', error);
-      alert("Erreur lors de la suppression du favori");
+      showError("Erreur lors de la suppression du favori");
     }
   };
 

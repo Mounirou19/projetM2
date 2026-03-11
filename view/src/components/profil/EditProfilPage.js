@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { showSuccess, showError } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/CreateForm.css';
 
 const EditProfilPage = () => {
@@ -10,14 +12,15 @@ const EditProfilPage = () => {
     firstname: '',
     email: '',
   });
-  const infos = [process.env.REACT_APP_ROLE_USER , localStorage.getItem('token')];
+  const userData = secureStorage.getUserData();
+  const infos = [process.env.REACT_APP_ROLE_USER, userData.token];
 
   useEffect(() => {
     // Récupérer les données de l'utilisateur depuis l'API
     const fetchUser = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/user/profil/${id}?infos=${infos}`, { 
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
         const data = await response.json();
         setFormData({
@@ -45,22 +48,29 @@ const EditProfilPage = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/user/edit/${id}?infos=${infos}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        localStorage.setItem('lastname', formData.lastname);
-        localStorage.setItem('firstname', formData.firstname);
-        localStorage.setItem('email', formData.email);
-        alert('Utilisateur mis à jour avec succès');
+        // Mettre à jour les données utilisateur dans secureStorage
+        const updatedUserData = {
+          ...userData,
+          lastname: formData.lastname,
+          firstname: formData.firstname,
+          email: formData.email
+        };
+        secureStorage.setItem('lastname', formData.lastname, false);
+        secureStorage.setItem('firstname', formData.firstname, false);
+        secureStorage.setItem('email', formData.email, false);
+        showSuccess('Utilisateur mis à jour avec succès');
         navigate('/profil');
       } else {
-        alert("Erreur lors de la mise à jour de l'utilisateur");
+        showError("Erreur lors de la mise à jour de l'utilisateur");
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert("Erreur lors de la mise à jour de l'utilisateur");
+      showError("Erreur lors de la mise à jour de l'utilisateur");
     }
   };
 

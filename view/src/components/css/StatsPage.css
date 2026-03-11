@@ -1,51 +1,94 @@
-/* Conteneur principal pour la page des statistiques */
+/* ========================================
+   STATS PAGE - STATISTIQUES ADMIN
+   ======================================== */
+
 .stats-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 48px;
     text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.6s ease-out;
   }
   
-  /* Titre principal */
   .stats-page h1 {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 20px;
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 48px;
+  }
+
+  .stats-page h1::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 16px auto 0;
+    border-radius: 2px;
   }
   
-  /* Style du graphique en barre */
   .chart-container {
     position: relative;
     margin: 0 auto;
-    height: 400px; /* Hauteur fixe pour le graphique */
+    height: 450px;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+    border-radius: 16px;
   }
   
-  button {
-    padding: 10px 20px;
-    margin-top: 20px;
-    background-color: #007bff;
-    color: #fff;
+  .stats-page button {
+    padding: 14px 32px;
+    margin-top: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
   }
-  /* Ajustement des styles pour les petits écrans */
+
+  .stats-page button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  }
+
+  .stats-page button:active {
+    transform: translateY(0);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
   @media (max-width: 768px) {
     .stats-page {
-      padding: 15px;
+      margin: 20px 10px;
+      padding: 32px 20px;
     }
   
     .stats-page h1 {
-      font-size: 24px;
+      font-size: 28px;
     }
   
     .chart-container {
-      height: 300px; /* Réduction de la hauteur pour les écrans plus petits */
+      height: 350px;
+      padding: 16px;
     }
   }
   

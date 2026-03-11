@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { showSuccess, showError } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/CreateForm.css';
 
 const EditMedia = () => {
@@ -45,19 +47,19 @@ const EditMedia = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/update/${id}?infos=${infos}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert('Média mis à jour avec succès');
+        showSuccess('Média mis à jour avec succès');
         navigate('/admin');
       } else {
-        alert("Erreur lors de la mise à jour du média");
+        showError("Erreur lors de la mise à jour du média");
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert("Erreur lors de la mise à jour du média");
+      showError("Erreur lors de la mise à jour du média");
     }
   };
 

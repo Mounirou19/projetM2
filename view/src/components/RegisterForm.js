@@ -1,6 +1,6 @@
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
-import '../css/RegisterForm.css';
+// import '../css/RegisterForm.css';
 
 /**
  * Composant RegisterForm - Formulaire d'inscription (présentation uniquement)
@@ -281,7 +281,7 @@ export function RgpdPolicyModal({ onClose }) {
 
                     <p className="modal-footer-text">
                         <small>
-                            <a href="/docs/POLITIQUE_CONFIDENTIALITE.md" target="_blank" rel="noopener noreferrer">
+                            <a href="/politique-confidentialite" target="_blank" rel="noopener noreferrer">
                                 📄 Consulter la politique de confidentialité complète
                             </a>
                         </small>

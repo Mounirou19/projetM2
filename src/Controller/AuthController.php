@@ -214,7 +214,7 @@ class AuthController extends AbstractController
             $this->logAuditEvent('LOGIN_FAILED_USER_NOT_FOUND', null, $clientIp, $data['email']);
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Identifiants invalides'
+                'message' => 'Email invalide ou Pas encore de compte associé. Veuillez vérifier vos informations ou vous inscrire.'
             ], 403);
         }
 

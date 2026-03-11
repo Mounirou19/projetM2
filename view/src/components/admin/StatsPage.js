@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import secureStorage from '../../utils/secureStorage';
 import '../css/StatsPage.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -20,7 +21,7 @@ const StatsPage = () => {
   const fetchScores = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/medias?infos=${infos}`, {
-      headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+      headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
       });
     
       if (!response.ok) throw new Error("Erreur lors de la récupération des scores des médias");

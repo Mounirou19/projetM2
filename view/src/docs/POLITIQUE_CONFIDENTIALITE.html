@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>POLITIQUE_CONFIDENTIALITE.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%F0%9F%93%8B-politique-de-confidentialit%C3%A9---cin%C3%A9manga">📋 POLITIQUE DE CONFIDENTIALITÉ - CinéManga</h1>
+<p><strong>Dernière mise à jour : 12 décembre 2025</strong></p>
+<hr>
+<h2 id="1-%F0%9F%91%A5-responsable-du-traitement-des-donn%C3%A9es">1. 👥 Responsable du traitement des données</h2>
+<p><strong>Nom de la plateforme</strong> : CinéManga<br>
+<strong>Type de projet</strong> : Projet Master 2 en Développement Informatique<br>
+<strong>Responsable</strong> : Mounirou CISSE<br>
+<strong>Contact</strong> : mounirou.cisse@ensitech.eu<br>
+<strong>Adresse</strong> : ENSITECH, France</p>
+<hr>
+<h2 id="2-%F0%9F%93%8A-donn%C3%A9es-collect%C3%A9es">2. 📊 Données collectées</h2>
+<h3 id="21-donn%C3%A9es-personnelles-obligatoires">2.1 Données personnelles obligatoires</h3>
+<p>Lors de votre inscription sur CinéManga, nous collectons les informations suivantes :</p>
+<table>
+<thead>
+<tr>
+<th>Donnée</th>
+<th>Type</th>
+<th>Finalité</th>
+<th>Base légale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nom</strong></td>
+<td>Identité</td>
+<td>Personnalisation du compte</td>
+<td>Consentement</td>
+</tr>
+<tr>
+<td><strong>Prénom</strong></td>
+<td>Identité</td>
+<td>Personnalisation du compte</td>
+<td>Consentement</td>
+</tr>
+<tr>
+<td><strong>Adresse email</strong></td>
+<td>Contact</td>
+<td>Authentification et communication</td>
+<td>Contrat</td>
+</tr>
+<tr>
+<td><strong>Mot de passe</strong></td>
+<td>Sécurité</td>
+<td>Authentification sécurisée (haché)</td>
+<td>Contrat</td>
+</tr>
+<tr>
+<td><strong>Date de création</strong></td>
+<td>Traçabilité</td>
+<td>Historique du compte</td>
+<td>Obligation légale (RGPD)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-donn%C3%A9es-collect%C3%A9es-automatiquement">2.2 Données collectées automatiquement</h3>
+<p>Pour assurer la sécurité de votre compte, nous collectons automatiquement :</p>
+<table>
+<thead>
+<tr>
+<th>Donnée</th>
+<th>Finalité</th>
+<th>Durée de conservation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Adresse IP de connexion</strong></td>
+<td>Sécurité anti-fraude, géolocalisation</td>
+<td>12 mois maximum</td>
+</tr>
+<tr>
+<td><strong>Date et heure de connexion</strong></td>
+<td>Audit de sécurité, traçabilité</td>
+<td>12 mois maximum</td>
+</tr>
+<tr>
+<td><strong>Tentatives de connexion échouées</strong></td>
+<td>Protection contre le brute force</td>
+<td>Réinitialisé après connexion réussie</td>
+</tr>
+<tr>
+<td><strong>Navigateur et appareil</strong></td>
+<td>Compatibilité technique</td>
+<td>Session uniquement</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-donn%C3%A9es-dutilisation">2.3 Données d'utilisation</h3>
+<table>
+<thead>
+<tr>
+<th>Donnée</th>
+<th>Type</th>
+<th>Finalité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Liste de favoris</strong></td>
+<td>Préférences</td>
+<td>Personnalisation de l'expérience</td>
+</tr>
+<tr>
+<td><strong>Historique de consultation</strong></td>
+<td>Comportement</td>
+<td>Recommandations (optionnel)</td>
+</tr>
+<tr>
+<td><strong>Messages de contact</strong></td>
+<td>Communication</td>
+<td>Support utilisateur</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3-%F0%9F%8E%AF-finalit%C3%A9s-du-traitement">3. 🎯 Finalités du traitement</h2>
+<h3 id="31-finalit%C3%A9s-principales">3.1 Finalités principales</h3>
+<p>✅ <strong>Gestion de votre compte utilisateur</strong></p>
+<ul>
+<li>Création et authentification du compte</li>
+<li>Accès aux fonctionnalités de la plateforme</li>
+<li>Modification de vos informations personnelles</li>
+</ul>
+<p>✅ <strong>Sécurité et protection</strong></p>
+<ul>
+<li>Protection contre les tentatives de piratage (brute force)</li>
+<li>Détection et prévention des fraudes</li>
+<li>Verrouillage temporaire en cas d'activité suspecte</li>
+<li>Traçabilité des actions pour audit de sécurité</li>
+</ul>
+<p>✅ <strong>Personnalisation de l'expérience</strong></p>
+<ul>
+<li>Gestion de vos médias favoris (films, séries, mangas)</li>
+<li>Recommandations basées sur vos préférences</li>
+<li>Historique de consultation</li>
+</ul>
+<p>✅ <strong>Communication</strong></p>
+<ul>
+<li>Réponse à vos demandes via le formulaire de contact</li>
+<li>Notifications importantes relatives à votre compte (optionnel)</li>
+<li>Information sur les mises à jour majeures de la plateforme</li>
+</ul>
+<h3 id="32-finalit%C3%A9s-secondaires">3.2 Finalités secondaires</h3>
+<p>📊 <strong>Statistiques anonymisées</strong></p>
+<ul>
+<li>Analyse d'utilisation de la plateforme</li>
+<li>Amélioration de l'ergonomie et des fonctionnalités</li>
+<li>Rapports agrégés (aucune donnée personnelle identifiable)</li>
+</ul>
+<p>🔒 <strong>Conformité légale</strong></p>
+<ul>
+<li>Respect des obligations légales (RGPD, CNIL)</li>
+<li>Conservation des logs pour audit en cas de litige</li>
+<li>Réponse aux demandes des autorités compétentes</li>
+</ul>
+<hr>
+<h2 id="4-%E2%9A%96%EF%B8%8F-base-l%C3%A9gale-du-traitement">4. ⚖️ Base légale du traitement</h2>
+<p>Conformément au RGPD (Règlement Général sur la Protection des Données), nous traitons vos données sur les bases légales suivantes :</p>
+<table>
+<thead>
+<tr>
+<th>Base légale</th>
+<th>Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Consentement explicite</strong></td>
+<td>Inscription volontaire, acceptation de la politique de confidentialité</td>
+</tr>
+<tr>
+<td><strong>Exécution du contrat</strong></td>
+<td>Fourniture du service CinéManga (authentification, gestion favoris)</td>
+</tr>
+<tr>
+<td><strong>Intérêt légitime</strong></td>
+<td>Sécurité du compte, prévention de la fraude, amélioration du service</td>
+</tr>
+<tr>
+<td><strong>Obligation légale</strong></td>
+<td>Conservation des logs pour traçabilité RGPD, réponse aux autorités</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5-%E2%8F%B1%EF%B8%8F-dur%C3%A9e-de-conservation-des-donn%C3%A9es">5. ⏱️ Durée de conservation des données</h2>
+<h3 id="51-donn%C3%A9es-actives">5.1 Données actives</h3>
+<table>
+<thead>
+<tr>
+<th>Type de donnée</th>
+<th>Durée de conservation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compte actif</strong></td>
+<td>Tant que le compte est actif et utilisé</td>
+</tr>
+<tr>
+<td><strong>Favoris et préférences</strong></td>
+<td>Tant que le compte est actif</td>
+</tr>
+<tr>
+<td><strong>Messages de contact traités</strong></td>
+<td>2 ans maximum après traitement</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-donn%C3%A9es-de-s%C3%A9curit%C3%A9">5.2 Données de sécurité</h3>
+<table>
+<thead>
+<tr>
+<th>Type de donnée</th>
+<th>Durée de conservation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logs de connexion (IP, date)</strong></td>
+<td>12 mois maximum (RGPD)</td>
+</tr>
+<tr>
+<td><strong>Tentatives échouées</strong></td>
+<td>Réinitialisé après connexion réussie ou après 15 minutes de verrouillage</td>
+</tr>
+<tr>
+<td><strong>Logs d'audit de sécurité</strong></td>
+<td>12 mois maximum</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-compte-inactif-ou-supprim%C3%A9">5.3 Compte inactif ou supprimé</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inactivité &gt; 3 ans</strong></td>
+<td>Email de relance → Suppression automatique après 6 mois sans réponse</td>
+</tr>
+<tr>
+<td><strong>Demande de suppression</strong></td>
+<td>Anonymisation immédiate des données personnelles</td>
+</tr>
+<tr>
+<td><strong>Compte désactivé</strong></td>
+<td>Conservation 30 jours pour récupération → Anonymisation définitive</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-donn%C3%A9es-anonymis%C3%A9es">5.4 Données anonymisées</h3>
+<p>Les <strong>statistiques anonymisées</strong> (nombre total d'utilisateurs, tendances générales) peuvent être conservées <strong>indéfiniment</strong> car elles ne permettent <strong>aucune identification personnelle</strong>.</p>
+<hr>
+<h2 id="6-%F0%9F%94%90-s%C3%A9curit%C3%A9-des-donn%C3%A9es">6. 🔐 Sécurité des données</h2>
+<h3 id="61-mesures-techniques-de-protection">6.1 Mesures techniques de protection</h3>
+<p>✅ <strong>Chiffrement des mots de passe</strong></p>
+<ul>
+<li>Algorithme bcrypt avec un coût de 12</li>
+<li>Aucun stockage en clair du mot de passe</li>
+<li>Impossibilité de récupération (reset uniquement)</li>
+</ul>
+<p>✅ <strong>Authentification sécurisée</strong></p>
+<ul>
+<li>Tokens JWT (JSON Web Tokens) signés avec algorithme RS256</li>
+<li>Expiration automatique des sessions (1 heure)</li>
+<li>Protection contre le rejeu de tokens (signature unique)</li>
+</ul>
+<p>✅ <strong>Protection contre les attaques</strong></p>
+<ul>
+<li><strong>Brute Force</strong> : Verrouillage après 5 tentatives échouées pendant 15 minutes</li>
+<li><strong>SQL Injection</strong> : Utilisation d'ORM Doctrine (requêtes préparées)</li>
+<li><strong>XSS (Cross-Site Scripting)</strong> : Échappement automatique des sorties HTML</li>
+<li><strong>CSRF (Cross-Site Request Forgery)</strong> : Tokens CSRF sur tous les formulaires</li>
+</ul>
+<p>✅ <strong>Connexions sécurisées</strong></p>
+<ul>
+<li>HTTPS/SSL en production (chiffrement TLS 1.3)</li>
+<li>Headers de sécurité (HSTS, CSP, X-Frame-Options)</li>
+<li>CORS configuré strictement (origines autorisées uniquement)</li>
+</ul>
+<h3 id="62-mesures-organisationnelles">6.2 Mesures organisationnelles</h3>
+<p>🔒 <strong>Accès restreint</strong></p>
+<ul>
+<li>Seuls les administrateurs autorisés peuvent accéder aux données</li>
+<li>Logs d'accès pour traçabilité</li>
+<li>Authentification forte pour l'administration</li>
+</ul>
+<p>🔒 <strong>Hébergement sécurisé</strong></p>
+<ul>
+<li>Serveurs locaux sécurisés (développement)</li>
+<li>Infrastructure Docker conteneurisée</li>
+<li>Sauvegardes régulières de la base de données</li>
+</ul>
+<p>🔒 <strong>Formation et sensibilisation</strong></p>
+<ul>
+<li>Respect des bonnes pratiques de développement sécurisé</li>
+<li>Veille sur les vulnérabilités (OWASP Top 10)</li>
+<li>Audits de sécurité périodiques</li>
+</ul>
+<h3 id="63-notification-de-violation">6.3 Notification de violation</h3>
+<p>En cas de violation de données personnelles (fuite, piratage), nous nous engageons à :</p>
+<ol>
+<li><strong>Contenir la violation</strong> dans les 24 heures</li>
+<li><strong>Notifier la CNIL</strong> dans les 72 heures si le risque est élevé</li>
+<li><strong>Vous informer personnellement</strong> par email si vos données sont concernées</li>
+<li><strong>Proposer des mesures correctives</strong> (changement de mot de passe, surveillance)</li>
+</ol>
+<hr>
+<h2 id="7-%F0%9F%8C%8D-partage-et-transfert-des-donn%C3%A9es">7. 🌍 Partage et transfert des données</h2>
+<h3 id="71-destinataires-des-donn%C3%A9es">7.1 Destinataires des données</h3>
+<p>Vos données personnelles <strong>ne sont jamais vendues, louées ou échangées</strong> à des tiers.</p>
+<table>
+<thead>
+<tr>
+<th>Destinataire</th>
+<th>Finalité</th>
+<th>Base légale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Administrateurs CinéManga</strong></td>
+<td>Gestion du service, support utilisateur</td>
+<td>Intérêt légitime</td>
+</tr>
+<tr>
+<td><strong>Hébergeur</strong></td>
+<td>Stockage technique des données</td>
+<td>Contrat</td>
+</tr>
+<tr>
+<td><strong>Autorités compétentes</strong></td>
+<td>Réquisition judiciaire uniquement</td>
+<td>Obligation légale</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72-transferts-hors-ue">7.2 Transferts hors UE</h3>
+<p><strong>Aucun transfert de données hors de l'Union Européenne</strong> n'est effectué dans le cadre de ce projet.</p>
+<hr>
+<h2 id="8-%E2%9C%85-vos-droits-rgpd">8. ✅ Vos droits RGPD</h2>
+<p>Conformément au RGPD, vous disposez des droits suivants :</p>
+<h3 id="81-droit-dacc%C3%A8s-article-15">8.1 Droit d'accès (Article 15)</h3>
+<p><strong>Vous pouvez consulter vos données personnelles à tout moment.</strong></p>
+<p>📧 <strong>Comment ?</strong></p>
+<ul>
+<li>Consultez votre profil utilisateur dans l'application</li>
+<li>Contactez-nous par email pour un export complet</li>
+</ul>
+<h3 id="82-droit-de-rectification-article-16">8.2 Droit de rectification (Article 16)</h3>
+<p><strong>Vous pouvez modifier vos informations personnelles si elles sont inexactes.</strong></p>
+<p>✏️ <strong>Comment ?</strong></p>
+<ul>
+<li>Modifiez directement vos informations dans votre profil</li>
+<li>Contactez-nous pour assistance</li>
+</ul>
+<h3 id="83-droit-%C3%A0-leffacement--droit-%C3%A0-loubli-article-17">8.3 Droit à l'effacement / Droit à l'oubli (Article 17)</h3>
+<p><strong>Vous pouvez demander la suppression définitive de vos données.</strong></p>
+<p>🗑️ <strong>Comment ?</strong></p>
+<ul>
+<li>Utilisez la fonction &quot;Supprimer mon compte&quot; dans votre profil</li>
+<li>Contactez-nous par email : mounirou.cisse@ensitech.eu</li>
+<li><strong>Délai d'exécution</strong> : 30 jours maximum</li>
+</ul>
+<p>⚠️ <strong>Limitations</strong> :</p>
+<ul>
+<li>Conservation possible si obligation légale (ex: logs d'audit 12 mois)</li>
+<li>Anonymisation immédiate des données personnelles</li>
+<li>Conservation des statistiques anonymisées</li>
+</ul>
+<h3 id="84-droit-%C3%A0-la-portabilit%C3%A9-article-20">8.4 Droit à la portabilité (Article 20)</h3>
+<p><strong>Vous pouvez récupérer vos données dans un format structuré.</strong></p>
+<p>📦 <strong>Comment ?</strong></p>
+<ul>
+<li>Demandez un export de vos données (format JSON ou CSV)</li>
+<li>Réception par email sous 30 jours maximum</li>
+</ul>
+<p><strong>Données exportables</strong> :</p>
+<ul>
+<li>Informations de profil</li>
+<li>Liste de favoris</li>
+<li>Historique de consultation</li>
+<li>Messages de contact</li>
+</ul>
+<h3 id="85-droit-dopposition-article-21">8.5 Droit d'opposition (Article 21)</h3>
+<p><strong>Vous pouvez vous opposer à certains traitements de données.</strong></p>
+<p>🚫 <strong>Comment ?</strong></p>
+<ul>
+<li>Désactivez les recommandations personnalisées</li>
+<li>Refusez les emails de notification (opt-out)</li>
+<li>Contactez-nous pour opposition spécifique</li>
+</ul>
+<h3 id="86-droit-%C3%A0-la-limitation-du-traitement-article-18">8.6 Droit à la limitation du traitement (Article 18)</h3>
+<p><strong>Vous pouvez demander de geler temporairement vos données.</strong></p>
+<p>⏸️ <strong>Comment ?</strong></p>
+<ul>
+<li>Contactez-nous par email avec votre demande motivée</li>
+<li>Délai de réponse : 15 jours maximum</li>
+</ul>
+<h3 id="87-exercice-de-vos-droits">8.7 Exercice de vos droits</h3>
+<p>📧 <strong>Contact</strong> : mounirou.cisse@ensitech.eu<br>
+📝 <strong>Objet du mail</strong> : &quot;Exercice de mes droits RGPD - CinéManga&quot;<br>
+🆔 <strong>Informations à fournir</strong> :</p>
+<ul>
+<li>Nom, prénom</li>
+<li>Adresse email du compte</li>
+<li>Nature de la demande (accès, rectification, suppression, etc.)</li>
+<li>Justificatif d'identité (si demande de suppression)</li>
+</ul>
+<p><strong>Délai de réponse</strong> : 30 jours maximum (prorogeable de 2 mois si demande complexe)</p>
+<h3 id="88-r%C3%A9clamation-aupr%C3%A8s-de-la-cnil">8.8 Réclamation auprès de la CNIL</h3>
+<p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez déposer une réclamation auprès de la <strong>Commission Nationale de l'Informatique et des Libertés (CNIL)</strong> :</p>
+<p>📧 <strong>Site web</strong> : https://www.cnil.fr/fr/plaintes<br>
+📞 <strong>Téléphone</strong> : 01 53 73 22 22<br>
+📮 <strong>Adresse</strong> : 3 Place de Fontenoy - TSA 80715 - 75334 PARIS CEDEX 07</p>
+<hr>
+<h2 id="9-%F0%9F%8D%AA-cookies-et-technologies-similaires">9. 🍪 Cookies et technologies similaires</h2>
+<h3 id="91-cookies-utilis%C3%A9s">9.1 Cookies utilisés</h3>
+<table>
+<thead>
+<tr>
+<th>Cookie</th>
+<th>Type</th>
+<th>Finalité</th>
+<th>Durée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>JWT Token</strong></td>
+<td>Authentification</td>
+<td>Maintien de la session utilisateur</td>
+<td>1 heure</td>
+</tr>
+<tr>
+<td><strong>Préférences UI</strong></td>
+<td>Fonctionnel</td>
+<td>Sauvegarde du thème, langue</td>
+<td>1 an</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-cookies-tiers">9.2 Cookies tiers</h3>
+<p><strong>Aucun cookie tiers</strong> (Google Analytics, publicité, réseaux sociaux) n'est utilisé sur CinéManga pour garantir votre confidentialité.</p>
+<h3 id="93-gestion-des-cookies">9.3 Gestion des cookies</h3>
+<p>🔧 <strong>Vous pouvez</strong> :</p>
+<ul>
+<li>Désactiver les cookies via votre navigateur</li>
+<li>Supprimer les cookies existants</li>
+<li>Paramétrer votre navigateur pour accepter/refuser au cas par cas</li>
+</ul>
+<p>⚠️ <strong>Attention</strong> : La désactivation des cookies peut limiter l'accès à certaines fonctionnalités (authentification).</p>
+<hr>
+<h2 id="10-%F0%9F%91%B6-protection-des-mineurs">10. 👶 Protection des mineurs</h2>
+<p>CinéManga est accessible aux personnes de <strong>13 ans et plus</strong>.</p>
+<p>🚸 <strong>Pour les mineurs de moins de 16 ans</strong> :</p>
+<ul>
+<li>Consentement parental requis pour l'inscription</li>
+<li>Les parents/tuteurs peuvent exercer les droits RGPD au nom du mineur</li>
+<li>Contenu adapté sans restriction d'âge excessive</li>
+</ul>
+<p>📧 <strong>Contact parental</strong> : mounirou.cisse@ensitech.eu</p>
+<hr>
+<h2 id="11-%F0%9F%94%84-modifications-de-la-politique">11. 🔄 Modifications de la politique</h2>
+<p>Cette politique de confidentialité peut être mise à jour pour refléter :</p>
+<ul>
+<li>L'évolution de la réglementation (RGPD, lois nationales)</li>
+<li>L'ajout de nouvelles fonctionnalités</li>
+<li>L'amélioration de la sécurité</li>
+</ul>
+<p>📅 <strong>En cas de modification majeure</strong> :</p>
+<ul>
+<li>Notification par email à tous les utilisateurs</li>
+<li>Affichage d'une bannière sur la plateforme</li>
+<li>Demande de nouveau consentement si nécessaire</li>
+</ul>
+<p><strong>Dernière mise à jour</strong> : 12 décembre 2025<br>
+<strong>Version</strong> : 2.0 (Sécurité renforcée + RGPD)</p>
+<hr>
+<h2 id="12-%F0%9F%93%9E-contact-et-d%C3%A9l%C3%A9gu%C3%A9-%C3%A0-la-protection-des-donn%C3%A9es">12. 📞 Contact et délégué à la protection des données</h2>
+<h3 id="121-responsable-du-traitement">12.1 Responsable du traitement</h3>
+<p><strong>Nom</strong> : Mounirou CISSE<br>
+<strong>Qualité</strong> : Développeur et responsable du projet CinéManga<br>
+<strong>Email</strong> : mounirou.cisse@ensitech.eu<br>
+<strong>Établissement</strong> : ENSITECH, France</p>
+<h3 id="122-d%C3%A9l%C3%A9gu%C3%A9-%C3%A0-la-protection-des-donn%C3%A9es-dpo">12.2 Délégué à la Protection des Données (DPO)</h3>
+<p>Dans le cadre de ce projet académique, le responsable du traitement assume également les fonctions de DPO.</p>
+<p>📧 <strong>Contact DPO</strong> : mounirou.cisse@ensitech.eu<br>
+📝 <strong>Objet</strong> : &quot;DPO CinéManga - Protection des données&quot;</p>
+<hr>
+<h2 id="13-%E2%9C%85-consentement">13. ✅ Consentement</h2>
+<p><strong>En créant un compte sur CinéManga, vous confirmez avoir :</strong></p>
+<p>✅ Lu et compris cette politique de confidentialité<br>
+✅ Accepté le traitement de vos données personnelles pour les finalités décrites<br>
+✅ Pris connaissance de vos droits RGPD et des modalités d'exercice<br>
+✅ Consenti librement et de manière éclairée au traitement de vos données</p>
+<p><strong>Vous pouvez retirer votre consentement à tout moment</strong> en supprimant votre compte ou en nous contactant.</p>
+<hr>
+<h2 id="14-%F0%9F%93%9A-r%C3%A9f%C3%A9rences-l%C3%A9gales">14. 📚 Références légales</h2>
+<ul>
+<li><strong>RGPD</strong> : Règlement (UE) 2016/679 du Parlement européen</li>
+<li><strong>Loi Informatique et Libertés</strong> : Loi n°78-17 du 6 janvier 1978 modifiée</li>
+<li><strong>Directive ePrivacy</strong> : Directive 2002/58/CE</li>
+<li><strong>CNIL</strong> : Commission Nationale de l'Informatique et des Libertés</li>
+</ul>
+<hr>
+<h2 id="15-%F0%9F%8C%90-liens-externes">15. 🌐 Liens externes</h2>
+<p>CinéManga peut contenir des liens vers des sites externes (ex: plateformes de streaming).</p>
+<p>⚠️ <strong>Attention</strong> :</p>
+<ul>
+<li>Ces sites ont leurs propres politiques de confidentialité</li>
+<li>Nous ne sommes pas responsables de leur traitement des données</li>
+<li>Nous vous recommandons de consulter leurs politiques avant utilisation</li>
+</ul>
+<hr>
+<h2 id="16-%E2%9C%8D%EF%B8%8F-acceptation">16. ✍️ Acceptation</h2>
+<p><strong>Date de première acceptation</strong> : Date de création de votre compte<br>
+<strong>Date de dernière acceptation</strong> : Affichée dans votre profil utilisateur</p>
+<p>💚 <strong>Merci de votre confiance !</strong></p>
+<p>L'équipe CinéManga s'engage à protéger vos données personnelles et à respecter votre vie privée conformément aux standards les plus élevés de sécurité et de transparence.</p>
+<hr>
+<p><strong>Document rédigé le 12 décembre 2025</strong><br>
+<strong>Projet CinéManga - Master 2 Développement Informatique</strong></p>
+
+</body>
+</html>

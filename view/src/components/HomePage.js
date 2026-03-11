@@ -111,22 +111,28 @@ const Home = () => {
         <h2>Recommandations Populaires</h2>
         <div className="recommendations">
           {mediaByType.film && (
+            <a href={`/media/${topFilms.id}`} className="recommendation">
             <div className="recommendation">
               <img src={`/img/${topFilms.imageUrl}`} alt={`Poster de ${topFilms.title}`} />
               <p>{topFilms.title}</p>
             </div>
+            </a>
           )}
           {mediaByType.serie && (
+            <a href={`/media/${topSeries.id}`} className="recommendation">
             <div className="recommendation">
               <img src={`/img/${topSeries.imageUrl}`} alt={`Poster de ${topSeries.title}`} />
               <p>{topSeries.title}</p>
             </div>
+            </a>
           )}
           {mediaByType.manga && (
+            <a href={`/media/${topMangas.id}`} className="recommendation">
             <div className="recommendation">
               <img src={`/img/${topMangas.imageUrl}`} alt={`Poster de ${topMangas.title}`} />
               <p>{topMangas.title}</p>
             </div>
+            </a>
           )}
         </div>
       </section>

@@ -34,12 +34,7 @@ services:
     networks:
       - symfony-network  # Connecte le conteneur au réseau "symfony-network"
     environment:
-      - CHOKIDAR_USEPOLLING=true  # Active le hot-reloading pour Docker
-      - REACT_APP_TOKEN=d@t@ventureprojetM2123$  # Token pour l'application React
-      - REACT_APP_API_URL=http://localhost:8083  # URL de l'API
-      - REACT_APP_ROLE_USER=ROLE_USER  # Rôle utilisateur
-      - REACT_APP_ROLE_ADMIN=ROLE_ADMIN  # Rôle administrateur
-      - REACT_APP_ADMIN_ACCESS_TOKEN=35!3J*V5p$5Qf3y6EjzbUG&
+      - .env  # Fichier d'environnement pour les variables d'environnement de React
 
   # Service phpMyAdmin avec plateforme spécifiée
   phpmyadmin:

@@ -1,97 +1,134 @@
-/* Container principal */
+/* ========================================
+   CREATE/EDIT FORMS - TOUS FORMULAIRES
+   ======================================== */
+
 .create-form-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 48px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s ease-out;
   }
   
-  /* Titre */
   .create-form-container h1 {
-    color: #333;
     text-align: center;
-    margin-bottom: 20px;
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 40px;
   }
   
-  /* Champs de formulaire */
-  label {
+  .create-form-container label {
     display: block;
     margin-bottom: 8px;
-    color: #444;
-    font-weight: bold;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  textarea {
+  .create-form-container input[type="text"],
+  .create-form-container input[type="email"],
+  .create-form-container input[type="password"],
+  .create-form-container input[type="file"],
+  .create-form-container textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
     font-size: 16px;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+    font-family: inherit;
   }
-  
-  textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  /* Boutons */
-  button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007bff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Message d'erreur */
-  .error-message {
-    color: #f44336;
-    font-size: 14px;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-  
-/* Style général pour le conteneur de formulaire */
-.create-form-container select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: #fff;
-    cursor: pointer;
-    appearance: none; /* Supprime les styles par défaut pour un look cohérent */
-  }
-  
-  /* Ajouter une icône de flèche personnalisée sur certains navigateurs */
-  .create-form-container select {
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='18' height='18' fill='gray'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 15px;
-  }
-  
+
+  .create-form-container input:focus,
+  .create-form-container textarea:focus,
   .create-form-container select:focus {
-    border-color: #007bff; /* Change la couleur de bordure au focus */
-    outline: none; /* Retire l'outline bleue par défaut */
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  }
+  
+  .create-form-container textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+  
+  .create-form-container button {
+    width: 100%;
+    padding: 16px 32px;
+    margin-top: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  }
+  
+  .create-form-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  }
+
+  .create-form-container button:active {
+    transform: translateY(0);
+  }
+
+  .create-form-container button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .error-message {
+    color: #ef4444;
+    font-size: 14px;
+    margin-bottom: 16px;
+    text-align: center;
+    padding: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  
+  .create-form-container select {
+    width: 100%;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    transition: all 0.3s ease;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20' fill='%23667eea'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 20px;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
     
   @media (max-width: 600px) {

@@ -12,6 +12,7 @@
 /view/node_modules/
 /docss/
 /img_pour_le_dossier/
+out/
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
@@ -19,3 +20,4 @@
 ###< lexik/jwt-authentication-bundle ###
 
 /.vscode/
+notifications.txt

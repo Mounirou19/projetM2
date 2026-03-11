@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { showSuccess, showError, showWarning } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/Admin.css';
 
 function AdminPage() {
@@ -31,11 +33,11 @@ function AdminPage() {
 
     const fetchData = async () => {
       const Response = await fetch(`${process.env.REACT_APP_API_URL}/admin/board?infos=${infos}`, {
-        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
       });
 
       if (!Response.ok) {
-        alert("Erreur lors de la récupération des données");
+        showError("Erreur lors de la récupération des données");
         return;
       }
 
@@ -56,13 +58,13 @@ function AdminPage() {
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/delete/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
     
         if (!response.ok) {
-            alert("Erreur lors de la désactivation de l'utilisateur");
+            showError("Erreur lors de la désactivation de l'utilisateur");
         }else{
-            alert("Utilisateur désactivé avec succès");
+            showSuccess("Utilisateur désactivé avec succès");
             fetchData();
         }
     };
@@ -71,13 +73,13 @@ function AdminPage() {
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/deletever/${id}?infos=${infos}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
     
         if (!response.ok) {
-            alert("Erreur lors de la suppression de l'utilisateur");
+            showError("Erreur lors de la suppression de l'utilisateur");
         }else{
-            alert("Utilisateur supprimer avec succès");
+            showSuccess("Utilisateur supprimé avec succès");
             fetchData();
         }
     };
@@ -85,13 +87,13 @@ function AdminPage() {
     const handleReactiveUser = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/reactivate/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
 
         if (!response.ok) {
-            alert("Erreur lors de la réactivation de l'utilisateur");
+            showError("Erreur lors de la réactivation de l'utilisateur");
         }else{
-            alert("Utilisateur réactivé avec succès");
+            showSuccess("Utilisateur réactivé avec succès");
             fetchData();
         }
     };
@@ -104,13 +106,13 @@ function AdminPage() {
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/delete/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
 
         if (!response.ok) {
-            alert("Erreur lors de la désactivation du media");
+            showError("Erreur lors de la désactivation du media");
         }else{
-            alert("Media désactivé avec succès");
+            showSuccess("Media désactivé avec succès");
             fetchData();
         }
     };
@@ -118,13 +120,13 @@ function AdminPage() {
     const handleReactiveMedia = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/reactivate/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
 
         if (!response.ok) {
-            alert("Erreur lors de la réactivation du media");
+            showError("Erreur lors de la réactivation du media");
         }else{
-            alert("Media réactivé avec succès");
+            showSuccess("Media réactivé avec succès");
             fetchData();
         }
     };
@@ -132,13 +134,13 @@ function AdminPage() {
     const handleLuContact = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/contact/lu/${id}?infos=${infos}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
 
         if (!response.ok) {
-            alert("Erreur lors de la mise à jour du contact");
+            showError("Erreur lors de la mise à jour du contact");
         }else{
-            alert("Contact mis à jour avec succès");
+            showSuccess("Contact mis à jour avec succès");
             fetchData();
         }
     };
@@ -146,13 +148,13 @@ function AdminPage() {
     const handleDeleteContact = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/contact/delete/${id}?infos=${infos}`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { "Content-Type": "application/json", 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
 
         if (!response.ok) {
-            alert("Erreur lors de la suppression du contact");
+            showError("Erreur lors de la suppression du contact");
         }else{
-            alert("Contact supprimé avec succès");
+            showSuccess("Contact supprimé avec succès");
             fetchData();
         }
     };
@@ -179,7 +181,7 @@ function AdminPage() {
     // Filtrer les médias selon la recherche
     const filteredMedias = medias.filter(media => 
       media.title.toLowerCase().includes(mediaSearch.toLowerCase()) ||
-      media.status.toLowerCase().includes(mediaSearch.toLowerCase()) ||
+      (media.status ? 'actif' : 'inactif').includes(mediaSearch.toLowerCase()) ||
       media.type.toLowerCase().includes(mediaSearch.toLowerCase())
     );
   

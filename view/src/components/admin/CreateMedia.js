@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { showSuccess, showError } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/CreateForm.css';
 
 const CreateMedia = () => {
@@ -25,12 +27,12 @@ const CreateMedia = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/create?infos=${infos}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert('Média créé avec succès');
+        showSuccess('Média créé avec succès');
         setFormData({
           title: '',
           type: '',
@@ -38,11 +40,11 @@ const CreateMedia = () => {
           description: '',
         });
       } else {
-        alert('Erreur lors de la création du média');
+        showError('Erreur lors de la création du média');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la création du média');
+      showError('Erreur lors de la création du média');
     }
   };
 

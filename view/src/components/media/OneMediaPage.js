@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { showSuccess, showError, showWarning } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/OneMediaPage.css';
 
 const OneMediaPage = () => {
@@ -8,9 +10,10 @@ const OneMediaPage = () => {
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false); // État pour suivre si le média est en favori
 
-  const userId = localStorage.getItem('id');
-  const userRole = localStorage.getItem('role');
-  const infos = [process.env.REACT_APP_ROLE_USER, localStorage.getItem('token')];
+  const userData = secureStorage.getUserData();
+  const userId = userData.id;
+  const userRole = userData.role;
+  const infos = [process.env.REACT_APP_ROLE_USER, userData.token];
 
   useEffect(() => {
     // Récupérer les informations du média
@@ -36,7 +39,7 @@ const OneMediaPage = () => {
       if (userId && userRole === process.env.REACT_APP_ROLE_USER) {
         try {
           const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/get/${userId}/${id}?infos=${infos}`, { 
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
           });
           if (!response.ok) {
             throw new Error('Erreur lors de la vérification du statut favori');
@@ -58,21 +61,21 @@ const OneMediaPage = () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/create/${userId}/${id}?infos=${infos}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
   
         if (response.ok) {
-          alert('Média ajouté aux favoris avec succès');
+          showSuccess('Média ajouté aux favoris avec succès');
           window.location.href = '/profil';
         } else {
-          alert("Erreur lors de l'ajout du média aux favoris");
+          showError("Erreur lors de l'ajout du média aux favoris");
         }
       } catch (error) {
         console.error("Erreur lors de l'ajout aux favoris:", error);
-        alert("Erreur lors de l'ajout du média aux favoris");
+        showError("Erreur lors de l'ajout du média aux favoris");
       }
     } else {
-      alert("Vous devez être connecté avec le rôle approprié pour ajouter ce média aux favoris.");
+      showWarning("Vous devez être connecté avec le rôle approprié pour ajouter ce média aux favoris.");
     }
   };
 

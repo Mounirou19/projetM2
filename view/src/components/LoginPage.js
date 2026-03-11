@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { showSuccess, showError, showWarning, showInfo } from '../utils/toast';
+import secureStorage from '../utils/secureStorage';
 import './css/Auth.css';
 
 const Login = () => {
@@ -11,15 +13,13 @@ const Login = () => {
 
   const navigate = useNavigate();
   const token = process.env.REACT_APP_TOKEN;
-  const roleU = process.env.REACT_APP_ROLE_USER;
-    const roleA = process.env.REACT_APP_ROLE_ADMIN;
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     // Validation du captcha
     if (!captchaToken) {
-      alert('Veuillez valider le captcha');
+      showWarning('Veuillez valider le captcha');
       return;
     }
 
@@ -38,46 +38,48 @@ const Login = () => {
         // Structure de réponse du AuthController
         const userData = data.datas; // Le contrôleur renvoie toujours data.datas
         
-        // Stockage des informations utilisateur
-        localStorage.setItem("jwtToken", data.token); // JWT pour les appels API sécurisés
-        localStorage.setItem("token", userData.token); // basicToken ou admin token (pour vérification côté client)
-        localStorage.setItem("id", userData.id);
-        localStorage.setItem("lastname", userData.lastname);
-        localStorage.setItem("firstname", userData.firstname);
-        localStorage.setItem("email", userData.email);
-        localStorage.setItem("role", userData.role);
+        // Stockage SÉCURISÉ des informations utilisateur (chiffrement AES)
+        secureStorage.setUserData(userData, data.token);
 
         // Vérification du statut du compte
         if (userData.status === false) {
-          alert("Votre compte est désactivé, veuillez contacter l'administrateur.");
+          showError("Votre compte est désactivé, veuillez contacter l'administrateur.");
           navigate('/contact');
           return;
         }
 
         // Redirection selon le rôle
-        if (userData.role === 'ROLE_ADMIN' && userData.token === token) {
-          alert("Vous allez être redirigé vers la page admin.");
-          window.location.href = '/admin';
-        } else if (userData.role === 'ROLE_USER' && userData.token === 'basicToken') {
-          alert("Vous allez être redirigé vers la page de votre profil.");
-          window.location.href = '/profil';
+        if (userData.role == 'ROLE_ADMIN') {
+          showSuccess("Vous allez être redirigé vers la page admin.");
+          setTimeout(() => {
+            window.location.href = '/admin';
+          }, 4000);
+        } else if (userData.role == 'ROLE_USER') {
+          showSuccess("Vous allez être redirigé vers la page de votre profil.");
+          setTimeout(() => {
+            window.location.href = '/profil';
+          }, 4000);
         } else {
-          alert("Connexion réussie !");
-          window.location.href = '/profil';
+          showSuccess("Connexion réussie !");
+          setTimeout(() => {
+            window.location.href = '/profil';
+          }, 4000);
         }
       } else {
         // Gestion des erreurs
         const errorMessage = data.message || 'Une erreur est survenue';
         
-        if (errorMessage.includes('Identifiants invalides') || errorMessage.includes('invalide')) {
-          alert("Email ou mot de passe incorrect.");
-        } else if (errorMessage.includes('désactivé') || errorMessage.includes('disabled')) {
-          alert("Votre compte est désactivé, veuillez contacter l'administrateur.");
+        if (errorMessage.includes('invalides')) {
+          showError("Mot de passe incorrect.");
+        }else if ( errorMessage.includes('Pas encore de compte')) { 
+          showError("Email invalide ou Pas encore de compte associé. Veuillez vérifier vos informations ou vous inscrire.");
+        }else if (errorMessage.includes('désactivé') || errorMessage.includes('disabled')) {
+          showError("Votre compte est désactivé, veuillez contacter l'administrateur.");
           navigate('/contact');
         } else if (errorMessage.includes('verrouillé') || errorMessage.includes('locked')) {
-          alert(errorMessage); // Affiche le message de verrouillage avec le temps restant
+          showWarning(errorMessage); // Affiche le message de verrouillage avec le temps restant
         } else {
-          alert(errorMessage);
+          showError(errorMessage);
         }
 
         // Réinitialisation du mot de passe et captcha
@@ -87,7 +89,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Erreur de connexion:', error);
-      alert("Erreur de connexion au serveur. Veuillez réessayer.");
+      showError("Erreur de connexion au serveur. Veuillez réessayer.");
       setPassword('');
       setCaptchaToken('');
       recaptchaRef.current?.reset();

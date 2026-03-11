@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { showSuccess, showError } from '../utils/toast';
+import secureStorage from '../utils/secureStorage';
 import './css/Contact.css';
 
 const Contact = () => {
+  const userData = secureStorage.getUserData();
   const [formData, setFormData] = useState({
-    name: (localStorage.getItem('lastname') && localStorage.getItem('firstname')) ? localStorage.getItem('lastname') + " " + localStorage.getItem('firstname') : '',
-    email: (localStorage.getItem('email')) ? localStorage.getItem('email') : '',
+    name: (userData.lastname && userData.firstname) ? userData.lastname + " " + userData.firstname : '',
+    email: userData.email || '',
     subject: '',
     message: '',
   });
@@ -30,15 +33,15 @@ const Contact = () => {
       });
 
       if (response.ok) {
-        alert('Message envoyé avec succès');
+        showSuccess('Message envoyé avec succès');
         setFormData({ name: '', email: '', subject: '', message: '' });
         setIsSubmitted(true);
       } else {
-        alert("Erreur lors de l'envoi du message");
+        showError("Erreur lors de l'envoi du message");
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert("Erreur lors de l'envoi du message");
+      showError("Erreur lors de l'envoi du message");
     }
   };
 
@@ -55,7 +58,7 @@ const Contact = () => {
           type="text"
           id="name"
           name="name"
-          disabled={localStorage.getItem('lastname') && localStorage.getItem('firstname')}
+          disabled={userData.lastname && userData.firstname}
           value={formData.name}
           onChange={handleChange}
           required
@@ -66,7 +69,7 @@ const Contact = () => {
           type="email"
           id="email"
           name="email"
-          disabled={localStorage.getItem('email')}
+          disabled={!!userData.email}
           value={formData.email}
           onChange={handleChange}
           required

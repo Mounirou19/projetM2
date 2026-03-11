@@ -1,32 +1,93 @@
-/* Styles du header */
+/* ========================================
+   HEADER MODERNE ET ÉPURÉ
+   ======================================== */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
+  padding: 16px 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
-.logo {
+.header-background {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.header-background:hover {
+  transform: scale(1.02);
+}
+
+.header-background img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.header-background h1 {
   font-size: 24px;
-  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
 }
 
 /* Navigation */
 .nav {
   display: flex;
-  gap: 15px;
+  gap: 32px;
+  align-items: center;
 }
 
 .nav-link {
-  color: #fff;
+  color: #4b5563;
   text-decoration: none;
   font-size: 16px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-  text-decoration: underline;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.nav-link:hover::after {
+  width: 60%;
+}
+
+.nav-link.active {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
 }
 
 /* Menu burger */
@@ -34,70 +95,66 @@
   display: none;
   flex-direction: column;
   cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.burger-menu:hover {
+  background: rgba(102, 126, 234, 0.1);
 }
 
 .burger-menu div {
   width: 25px;
   height: 3px;
-  background-color: #fff;
-  margin: 4px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 3px 0;
   transition: 0.4s;
+  border-radius: 2px;
 }
 
-.header-background {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-
-}
-.header-background:hover {
-  cursor: pointer;
-}
-
-.header-background img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-}
-
-/* Styles pour le menu burger en version mobile */
+/* Responsive */
 @media (max-width: 768px) {
-  /* Cacher la navigation principale sur mobile */
+  .header {
+    padding: 12px 20px;
+  }
+
   .nav {
     display: none;
   }
 
-  /* Afficher le burger menu */
   .burger-menu {
     display: flex;
   }
 
-  /* Menu déroulant quand le burger est cliqué */
   .nav.active {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 60px;
+    top: 70px;
     left: 0;
-    width: 100%;
-    background-color: #333;
-    z-index: 1;
-    padding: 10px 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    gap: 12px;
+    border-radius: 0 0 16px 16px;
   }
 
   .nav-link {
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 18px;
     text-align: center;
+    width: 100%;
   }
 
-  .header-background h1{
+  .header-background h1 {
     display: none;
   }
 
   .header-background img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
+    width: 40px;
+    height: 40px;
   }
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { showSuccess, showError } from '../../utils/toast';
+import secureStorage from '../../utils/secureStorage';
 import '../css/CreateForm.css';
 
 const CreateUser = () => {
@@ -26,12 +28,12 @@ const CreateUser = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/create?infos=${infos}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+        headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert('Utilisateur créé avec succès');
+        showSuccess('Utilisateur créé avec succès');
         setFormData({
           lastname: '',
           firstname: '',
@@ -40,11 +42,11 @@ const CreateUser = () => {
           role: '',
         });
       } else {
-        alert("Erreur lors de la création de l'utilisateur");
+        showError("Erreur lors de la création de l'utilisateur");
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert("Erreur lors de la création de l'utilisateur");
+      showError("Erreur lors de la création de l'utilisateur");
     }
   };
 
