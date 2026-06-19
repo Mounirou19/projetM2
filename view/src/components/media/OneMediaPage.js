@@ -5,10 +5,14 @@ import secureStorage from '../../utils/secureStorage';
 import '../css/OneMediaPage.css';
 
 const OneMediaPage = () => {
-  const { id } = useParams(); // Récupère l'ID du média depuis l'URL
+  const { id } = useParams();
   const [media, setMedia] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isFavorite, setIsFavorite] = useState(false); // État pour suivre si le média est en favori
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Affichage : lecteur (streaming à venir) + synopsis
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [showDesc, setShowDesc] = useState(false);
 
   const userData = secureStorage.getUserData();
   const userId = userData.id;
@@ -16,15 +20,12 @@ const OneMediaPage = () => {
   const infos = [process.env.REACT_APP_ROLE_USER, userData.token];
 
   useEffect(() => {
-    // Récupérer les informations du média
     const fetchMedia = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/media/${id}`, { 
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/media/${id}`, {
           headers: { 'Content-Type': 'application/json' },
         });
-        if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des informations du média');
-        }
+        if (!response.ok) throw new Error('Erreur lors de la récupération des informations du média');
         const data = await response.json();
         setMedia(data[0]);
         setLoading(false);
@@ -34,18 +35,15 @@ const OneMediaPage = () => {
       }
     };
 
-    // Vérifier si le média est déjà en favori
     const checkFavoriteStatus = async () => {
       if (userId && userRole === process.env.REACT_APP_ROLE_USER) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/get/${userId}/${id}?infos=${infos}`, { 
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/profil/get/${userId}/${id}?infos=${infos}`, {
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
           });
-          if (!response.ok) {
-            throw new Error('Erreur lors de la vérification du statut favori');
-          }
+          if (!response.ok) throw new Error('Erreur lors de la vérification du statut favori');
           const isFav = await response.json();
-          setIsFavorite(isFav); // Met à jour l'état en fonction de la réponse (true ou false)
+          setIsFavorite(isFav);
         } catch (error) {
           console.error('Erreur lors de la vérification du statut favori:', error);
         }
@@ -63,7 +61,6 @@ const OneMediaPage = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
         });
-  
         if (response.ok) {
           showSuccess('Média ajouté aux favoris avec succès');
           window.location.href = '/profil';
@@ -75,32 +72,88 @@ const OneMediaPage = () => {
         showError("Erreur lors de l'ajout du média aux favoris");
       }
     } else {
-      showWarning("Vous devez être connecté avec le rôle approprié pour ajouter ce média aux favoris.");
+      showWarning('Vous devez être connecté avec le rôle approprié pour ajouter ce média aux favoris.');
     }
   };
 
-  if (loading) {
-    return <p>Chargement des informations du média...</p>;
-  }
+  // "Regarder le film" — ne lance rien pour l'instant (streaming à venir)
+  const handleWatch = () => {
+    setShowPlayer(true);
+    setShowDesc(false);
+  };
 
-  if (!media) {
-    return <p>Aucun média trouvé.</p>;
-  }
+  const formatType = (type) => {
+    switch (type) {
+      case 'serie': return 'Série';
+      case 'film': return 'Film';
+      case 'manga': return 'Manga';
+      default: return type;
+    }
+  };
+
+  if (loading) return <p className="onemedia-loading">Chargement des informations du média…</p>;
+  if (!media) return <p className="onemedia-loading">Aucun média trouvé.</p>;
+
+  const isUser = userId && userRole === process.env.REACT_APP_ROLE_USER;
 
   return (
-    <div className="one-media-page">
-      <h1>{media.title}</h1>
-      <img src={`/img/${media.imageUrl}`} alt={media.title} className="media-detail-image" />
-      <p><strong>Type :</strong> {media.type}</p>
-      <p><strong>Description :</strong> {media.description}</p>
+    <div className="onemedia-page">
+      {/* Hero immersif : affiche en avant */}
+      <div className="onemedia-hero">
+        <div className="onemedia-hero-bg" style={{ backgroundImage: `url(/img/${media.imageUrl})` }}></div>
+        <div className="onemedia-hero-inner">
+          <div className="onemedia-poster">
+            <img src={`/img/${media.imageUrl}`} alt={media.title} />
+          </div>
+          <div className="onemedia-info">
+            <span className="onemedia-badge">{formatType(media.type)}</span>
+            <h1>{media.title}</h1>
+            <div className="onemedia-meta">
+              {media.score != null && <span className="onemedia-score">★ {media.score}</span>}
+              {media.score != null && <span className="onemedia-meta-sep">/ 10</span>}
+              <span className="onemedia-meta-type">{formatType(media.type)}</span>
+            </div>
 
-      {/* Afficher le bouton Ajouter aux favoris si l'utilisateur a le bon rôle */}
-      {userId && userRole === process.env.REACT_APP_ROLE_USER && !isFavorite && (
-        <button onClick={handleAddToFavorites} className="favorite-button">
-          Ajouter aux favoris
-        </button>
-      )}
-      {isFavorite && <p className="favorite-message">Ce média est dans vos favoris</p>}
+            <div className="onemedia-actions">
+              <button className="btn-watch" onClick={handleWatch}>
+                <span className="play-tri">▶</span> Regarder le film
+              </button>
+              <button className="btn-desc" onClick={() => setShowDesc((v) => !v)}>
+                {showDesc ? 'Masquer la description' : 'Voir la description'}
+              </button>
+
+              {/* Logique favoris — utilisateur connecté uniquement (inchangée) */}
+              {isUser && !isFavorite && (
+                <button className="favorite-button" onClick={handleAddToFavorites}>♡ Ajouter aux favoris</button>
+              )}
+              {isFavorite && (
+                <button className="favorite-button is-fav" disabled>♥ Dans vos favoris</button>
+              )}
+            </div>
+
+            {isFavorite && <p className="favorite-message">✓ Ce média fait partie de vos favoris</p>}
+          </div>
+        </div>
+      </div>
+
+      {/* Lecteur + synopsis */}
+      <div className="onemedia-content">
+        {showPlayer && (
+          <div className="onemedia-player">
+            <button className="player-close" onClick={() => setShowPlayer(false)} aria-label="Fermer">✕</button>
+            <div className="player-play">▶</div>
+            <div className="player-text">Lecture de « {media.title} »</div>
+            <div className="player-sub">Le streaming sera bientôt disponible.</div>
+          </div>
+        )}
+
+        {showDesc && (
+          <div className="onemedia-synopsis">
+            <h2>Synopsis</h2>
+            <p>{media.description}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

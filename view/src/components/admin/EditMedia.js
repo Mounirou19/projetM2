@@ -19,12 +19,14 @@ const EditMedia = () => {
     // Récupérer les données du média depuis l'API
     const fetchMedia = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/${id}?infos=${infos}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/media/${id}?infos=${infos}`, {
+          headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
+        });
         const data = await response.json();
         setFormData({
           title: data.title,
           type: data.type,
-          imaageUrl: data.imageUrl,
+          imageUrl: data.imageUrl,
           description: data.description,
         });
       } catch (error) {

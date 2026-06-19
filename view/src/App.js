@@ -26,6 +26,8 @@ import ProfilPage from './components/profil/ProfilPage';
 import EditProfilPAge from './components/profil/EditProfilPage';
 import Header from './Header';
 import Logout from './components/LogoutPage';
+import ForgotPasswordPage from './components/ForgotPasswordPage';
+import ResetPasswordPage from './components/ResetPasswordPage';
 import rgbd from './docs/POLITIQUE_CONFIDENTIALITE.pdf';
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         {/* <Route path="/profil" element={<ProfilPage />} /> */}
         <Route path="/profil" element={
           <ProtectedRouteUser>

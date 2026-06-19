@@ -3,44 +3,68 @@ import './css/About.css';
 
 const About = () => {
   return (
-    <div className="about-container">
-      <h1>À propos de Nous</h1>
-      <p>
-        Bienvenue sur notre plateforme ! Nous répertorions une vaste collection de
-        films, séries et mangas pour vous offrir une expérience de divertissement
-        complète. Notre mission est de rendre accessible une base de données enrichie
-        et mise à jour pour les amateurs de culture visuelle.
-      </p>
+    <div className="about-page">
+      {/* En-tête */}
+      <header className="about-hero">
+        <div className="about-hero-inner">
+          <span className="about-badge">À propos</span>
+          <h1>Tout votre univers visuel, au même endroit.</h1>
+          <p>
+            CinéManga répertorie une vaste collection de films, séries et mangas
+            pour vous offrir une expérience de divertissement complète, fiable et
+            toujours à jour.
+          </p>
+        </div>
+      </header>
 
-      <h2>Notre Mission</h2>
-      <p>
-        Nous croyons que tout le monde devrait avoir accès à des informations fiables
-        et complètes sur leurs films, séries et mangas préférés. Que vous soyez un
-        passionné d'action, un amateur de romance ou un fan de science-fiction, notre
-        site est là pour vous aider à trouver les œuvres qui correspondent à vos
-        goûts.
-      </p>
+      <div className="about-body">
+        {/* Mission */}
+        <section className="about-section">
+          <h2>Notre mission</h2>
+          <p>
+            Nous croyons que tout le monde devrait avoir accès à des informations
+            fiables et complètes sur ses films, séries et mangas préférés. Que vous
+            soyez passionné d'action, amateur de romance ou fan de science-fiction,
+            notre plateforme vous aide à trouver les œuvres qui correspondent à vos goûts.
+          </p>
+        </section>
 
-      <h2>Technologies Utilisées</h2>
-      <ul>
-        <li><strong>React</strong> - Pour une interface utilisateur dynamique et réactive.</li>
-        {/* <li><strong>Redux</strong> - Pour une gestion d'état efficace de l'application.</li> */}
-        <li><strong>Symfony</strong> - Pour gérer le backend et les API de notre base de données de contenu.</li>
-        <li><strong>SQL</strong> - Pour stocker les données de films, séries et mangas.</li>
-      </ul>
+        {/* Technologies */}
+        <section className="about-section">
+          <h2>Technologies utilisées</h2>
+          <div className="about-tech">
+            <div className="tech-card">
+              <div className="tech-icon">⚛️</div>
+              <h3>React</h3>
+              <p>Une interface utilisateur dynamique et réactive.</p>
+            </div>
+            <div className="tech-card">
+              <div className="tech-icon">🎼</div>
+              <h3>Symfony</h3>
+              <p>Le backend et les API de notre base de contenu.</p>
+            </div>
+            <div className="tech-card">
+              <div className="tech-icon">🗄️</div>
+              <h3>SQL</h3>
+              <p>Le stockage des films, séries et mangas.</p>
+            </div>
+          </div>
+        </section>
 
-      <h2>Notre Équipe</h2>
-      <p>
-        Nous sommes une équipe de passionnés de films, de séries et de mangas, dédiée
-        à créer une plateforme intuitive et riche en contenu pour les amateurs de
-        divertissement visuel.
-      </p>
-
-      <p>
-        Merci d’utiliser notre site pour découvrir et redécouvrir vos œuvres
-        préférées. Nous espérons que vous trouverez de nouvelles recommandations et
-        que vous apprécierez l’expérience !
-      </p>
+        {/* Équipe */}
+        <section className="about-section">
+          <h2>Notre équipe</h2>
+          <p>
+            Nous sommes une équipe de passionnés de films, de séries et de mangas,
+            dédiée à créer une plateforme intuitive et riche en contenu pour les
+            amateurs de divertissement visuel.
+          </p>
+          <p className="about-thanks">
+            Merci d'utiliser CinéManga pour découvrir et redécouvrir vos œuvres
+            préférées. Nous espérons que vous y trouverez de belles recommandations !
+          </p>
+        </section>
+      </div>
     </div>
   );
 };

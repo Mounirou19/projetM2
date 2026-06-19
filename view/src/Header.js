@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import secureStorage from './utils/secureStorage';
 import './Header.css';
 
@@ -8,40 +8,50 @@ const Header = () => {
   const navigate = useNavigate();
   const userData = secureStorage.getUserData();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  // Classe pour NavLink : ajoute "active" sur le lien de la page courante
+  const linkClass = ({ isActive }) => 'nav-link' + (isActive ? ' active' : '');
 
   return (
     <header className="header">
-      <div className="header-background" onClick={() => navigate("/")}>
-        <img src="/logo-Photoroom.png" alt="logo site web" />
-        <h1 className="logo">Films & Séries & Mangas</h1>
+      {/* Logo / marque */}
+      <div className="header-brand" onClick={() => { navigate('/'); closeMenu(); }}>
+        <span className="brand-mark">C</span>
+        <span className="brand-name">CinéManga</span>
       </div>
 
-      {/* Menu burger pour mobile */}
-      <div className="burger-menu" onClick={toggleMenu}>
+      {/* Menu burger (mobile) */}
+      <button
+        className={`burger-menu ${isMenuOpen ? 'open' : ''}`}
+        onClick={toggleMenu}
+        aria-label="Menu"
+        aria-expanded={isMenuOpen}
+      >
         <div></div>
         <div></div>
         <div></div>
-      </div>
+      </button>
 
-      {/* Navigation principale */}
+      {/* Navigation */}
       <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
-        <Link to="/" className="nav-link" onClick={() => setIsMenuOpen(false)}>Accueil</Link>
-        <Link to="/media" className="nav-link" onClick={() => setIsMenuOpen(false)}>Médias</Link>
-        <Link to="/about" className="nav-link" onClick={() => setIsMenuOpen(false)}>À propos</Link>
-        <Link to="/contact" className="nav-link" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+        <NavLink to="/" end className={linkClass} onClick={closeMenu}>Accueil</NavLink>
+        <NavLink to="/media" className={linkClass} onClick={closeMenu}>Médias</NavLink>
+        <NavLink to="/about" className={linkClass} onClick={closeMenu}>À propos</NavLink>
+        <NavLink to="/contact" className={linkClass} onClick={closeMenu}>Contact</NavLink>
+
         {userData.role === process.env.REACT_APP_ROLE_ADMIN && (
-          <Link to="/admin" className="nav-link" onClick={() => setIsMenuOpen(false)}>Admin</Link>
+          <NavLink to="/admin" className={linkClass} onClick={closeMenu}>Admin</NavLink>
         )}
         {userData.role === process.env.REACT_APP_ROLE_USER && (
-          <Link to="/profil" className="nav-link" onClick={() => setIsMenuOpen(false)}>Mon profil</Link>
+          <NavLink to="/profil" className={linkClass} onClick={closeMenu}>Mon profil</NavLink>
         )}
+
         {userData.email ? (
-          <Link to="/logout" className="nav-link" onClick={() => setIsMenuOpen(false)}>Déconnexion</Link>
+          <NavLink to="/logout" className="nav-cta nav-cta-ghost" onClick={closeMenu}>Déconnexion</NavLink>
         ) : (
-          <Link to="/login" className="nav-link" onClick={() => setIsMenuOpen(false)}>Connexion</Link>
+          <NavLink to="/login" className="nav-cta" onClick={closeMenu}>Connexion</NavLink>
         )}
       </nav>
     </header>

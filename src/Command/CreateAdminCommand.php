@@ -68,6 +68,8 @@ class CreateAdminCommand extends Command
         $admin->setPassword(password_hash($password, PASSWORD_BCRYPT));
         $admin->setRole('ROLE_ADMIN');
         $admin->setStatus(true);
+        $admin->setCreatedAt(new \DateTime());
+        $admin->setRgpdConsent(true);
 
         $this->entityManager->persist($admin);
         $this->entityManager->flush();

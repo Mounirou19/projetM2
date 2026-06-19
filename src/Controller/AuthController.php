@@ -457,6 +457,121 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Demande de réinitialisation de mot de passe
+     * Génère un token valable 1 heure et envoie un email à l'utilisateur.
+     */
+    #[Route('/forgot-password', name: 'app_forgot_password', methods: ['POST'])]
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $email = trim($data['email'] ?? '');
+
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Email invalide'], 400);
+        }
+
+        $user = $this->entityManager->getRepository(Users::class)->findOneBy(['email' => $email]);
+
+        // Réponse générique : ne pas révéler si l'email existe
+        if (!$user || !$user->isStatus()) {
+            return new JsonResponse([
+                'status' => 'success',
+                'message' => 'Si cet email est associé à un compte, vous recevrez un lien de réinitialisation.'
+            ], 200);
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $expiresAt = new \DateTime('+1 hour');
+
+        $user->setResetPasswordToken($token);
+        $user->setResetPasswordTokenExpiresAt($expiresAt);
+        $this->entityManager->flush();
+
+        $frontendUrl = $_ENV['FRONTEND_URL'] ?? 'http://localhost:3000';
+        $resetLink = $frontendUrl . '/reset-password?token=' . $token;
+
+        $this->sendResetEmail($email, $user->getFirstname(), $resetLink);
+        $this->logAuditEvent('PASSWORD_RESET_REQUESTED', $user->getId(), $request->getClientIp());
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'Si cet email est associé à un compte, vous recevrez un lien de réinitialisation.'
+        ], 200);
+    }
+
+    /**
+     * Réinitialisation effective du mot de passe via token
+     */
+    #[Route('/reset-password', name: 'app_reset_password', methods: ['POST'])]
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $token = trim($data['token'] ?? '');
+        $newPassword = $data['password'] ?? '';
+
+        if (empty($token) || empty($newPassword)) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Token et mot de passe requis'], 400);
+        }
+
+        if (strlen($newPassword) < 8 || !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/', $newPassword)) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)'
+            ], 400);
+        }
+
+        $user = $this->entityManager->getRepository(Users::class)
+            ->findOneBy(['resetPasswordToken' => $token]);
+
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Token invalide ou expiré'], 400);
+        }
+
+        if ($user->getResetPasswordTokenExpiresAt() < new \DateTime()) {
+            $user->setResetPasswordToken(null);
+            $user->setResetPasswordTokenExpiresAt(null);
+            $this->entityManager->flush();
+            return new JsonResponse(['status' => 'error', 'message' => 'Token expiré, veuillez faire une nouvelle demande'], 400);
+        }
+
+        $user->setPassword(password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 12]));
+        $user->setResetPasswordToken(null);
+        $user->setResetPasswordTokenExpiresAt(null);
+        $user->setFailedLoginAttempts(0);
+        $user->setLockedUntil(null);
+        $this->entityManager->flush();
+
+        $this->logAuditEvent('PASSWORD_RESET_SUCCESS', $user->getId(), $request->getClientIp());
+
+        return new JsonResponse(['status' => 'success', 'message' => 'Mot de passe réinitialisé avec succès'], 200);
+    }
+
+    /**
+     * Envoi de l'email de réinitialisation.
+     * Utilise mail() PHP natif et écrit aussi dans reset_links.txt en dev.
+     */
+    private function sendResetEmail(string $toEmail, string $firstname, string $resetLink): void
+    {
+        $subject = '=?UTF-8?B?' . base64_encode('Réinitialisation de votre mot de passe CinéManga') . '?=';
+        $body = "Bonjour $firstname,\n\n"
+            . "Vous avez demandé la réinitialisation de votre mot de passe.\n"
+            . "Cliquez sur le lien ci-dessous (valable 1 heure) :\n\n"
+            . $resetLink . "\n\n"
+            . "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.\n\n"
+            . "L'équipe CinéManga";
+
+        $headers = "From: noreply@cinemanga.fr\r\nContent-Type: text/plain; charset=UTF-8";
+
+        @mail($toEmail, $subject, $body, $headers);
+
+        // Fallback dev : écrit le lien dans un fichier log
+        $racine = str_replace('public', '', $_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__, 2) . '/public/');
+        $filePath = $racine . 'reset_links.txt';
+        $log = "[" . date('Y-m-d H:i:s') . "] Reset link for $toEmail : $resetLink\n";
+        @file_put_contents($filePath, $log, FILE_APPEND);
+    }
+
+    /**
      * Vérification du captcha Google reCAPTCHA v2
      * 
      * @param string $token Token reCAPTCHA du client

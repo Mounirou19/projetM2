@@ -242,6 +242,8 @@ class AdminController extends AbstractController
         $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
         $user->setRole($data['role']);
         $user->setStatus(true);
+        $user->setCreatedAt(new \DateTime());
+        $user->setRgpdConsent(true);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

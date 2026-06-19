@@ -15,23 +15,17 @@ const Contact = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Envoyer le formulaire via l'API Formspree
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/contact/create`, { 
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/contact/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
         showSuccess('Message envoyé avec succès');
         setFormData({ name: '', email: '', subject: '', message: '' });
@@ -47,56 +41,56 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      <h1>Contactez-nous</h1>
-      <p>
-        Vous avez des questions ou des suggestions ? Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.
-      </p>
+      <div className="contact-card">
+        {/* Panneau d'info */}
+        <aside className="contact-aside">
+          <div className="contact-aside-mark">C</div>
+          <h2>Une question ?<br />Parlons-en.</h2>
+          <p>Des suggestions, un bug, une œuvre à ajouter au catalogue ? On vous répond dans les plus brefs délais.</p>
+          <div className="contact-aside-item"><span>✉</span> mounirou.cisse@ensitech.eu</div>
+          <div className="contact-aside-item"><span>⌚</span> Réponse sous 24–48 h</div>
+        </aside>
 
-      <form onSubmit={handleSubmit} className="contact-form">
-        <label htmlFor="name">Nom :</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          disabled={userData.lastname && userData.firstname}
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+        {/* Formulaire */}
+        <div className="contact-form-wrap">
+          <h1>Contactez-nous</h1>
+          <p className="contact-intro">Remplissez le formulaire ci-dessous et nous reviendrons vers vous rapidement.</p>
 
-        <label htmlFor="email">Email :</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          disabled={!!userData.email}
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+          <form onSubmit={handleSubmit} className="contact-form">
+            <div className="contact-row">
+              <div className="contact-field">
+                <label htmlFor="name">Nom</label>
+                <input
+                  type="text" id="name" name="name"
+                  disabled={userData.lastname && userData.firstname}
+                  value={formData.name} onChange={handleChange} required
+                />
+              </div>
+              <div className="contact-field">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email" id="email" name="email"
+                  disabled={!!userData.email}
+                  value={formData.email} onChange={handleChange} required
+                />
+              </div>
+            </div>
 
-        <label htmlFor="subject">Sujet :</label>
-        <input
-          type="text"
-          id="subject"
-          name="subject"
-          value={formData.subject}
-          onChange={handleChange}
-          required
-        />
+            <div className="contact-field">
+              <label htmlFor="subject">Sujet</label>
+              <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleChange} required />
+            </div>
 
-        <label htmlFor="message">Message :</label>
-        <textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          required
-        ></textarea>
+            <div className="contact-field">
+              <label htmlFor="message">Message</label>
+              <textarea id="message" name="message" rows="5" value={formData.message} onChange={handleChange} required></textarea>
+            </div>
 
-        <button type="submit">Envoyer</button>
-        {isSubmitted && <p className="success-message">Merci pour votre message ! Nous vous contacterons bientôt.</p>}
-      </form>
+            <button type="submit" className="contact-submit">Envoyer le message</button>
+            {isSubmitted && <p className="success-message">Merci pour votre message ! Nous vous contacterons bientôt.</p>}
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

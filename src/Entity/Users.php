@@ -126,6 +126,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isEmailVerified = false;
 
     /**
+     * Token de réinitialisation du mot de passe
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resetPasswordToken = null;
+
+    /**
+     * Date d'expiration du token de réinitialisation (1 heure)
+     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $resetPasswordTokenExpiresAt = null;
+
+    /**
      * Récupère l'identifiant unique de l'utilisateur
      * 
      * @return int|null L'ID de l'utilisateur ou null si non défini
@@ -431,6 +443,28 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsEmailVerified(bool $isEmailVerified): static
     {
         $this->isEmailVerified = $isEmailVerified;
+        return $this;
+    }
+
+    public function getResetPasswordToken(): ?string
+    {
+        return $this->resetPasswordToken;
+    }
+
+    public function setResetPasswordToken(?string $resetPasswordToken): static
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
+        return $this;
+    }
+
+    public function getResetPasswordTokenExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->resetPasswordTokenExpiresAt;
+    }
+
+    public function setResetPasswordTokenExpiresAt(?\DateTimeInterface $resetPasswordTokenExpiresAt): static
+    {
+        $this->resetPasswordTokenExpiresAt = $resetPasswordTokenExpiresAt;
         return $this;
     }
 }

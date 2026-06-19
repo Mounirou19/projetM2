@@ -5,29 +5,24 @@ import '../css/MediaPage.css';
 const MediaPage = () => {
   const [medias, setMedias] = useState({});
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(''); // État pour le terme de recherche
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeType, setActiveType] = useState('all');
 
   useEffect(() => {
     const fetchMedias = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/media`, { 
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/media`, {
           headers: { 'Content-Type': 'application/json' },
         });
-        if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des médias');
-        }
+        if (!response.ok) throw new Error('Erreur lors de la récupération des médias');
         const data = await response.json();
-        
         const mediaByType = data.reduce((acc, media) => {
-          if (media.status === true) { // Vérifier si le statut est true
-            if (!acc[media.type]) {
-              acc[media.type] = [];
-            }
+          if (media.status === true) {
+            if (!acc[media.type]) acc[media.type] = [];
             acc[media.type].push(media);
           }
           return acc;
         }, {});
-
         setMedias(mediaByType);
         setLoading(false);
       } catch (error) {
@@ -35,74 +30,78 @@ const MediaPage = () => {
         setLoading(false);
       }
     };
-
     fetchMedias();
   }, []);
 
   const formatType = (type) => {
     switch (type) {
-      case 'serie':
-        return 'Séries';
-      case 'film':
-        return 'Films';
-      case 'manga':
-        return 'Mangas';
-      default:
-        return type.charAt(0).toUpperCase() + type.slice(1);
+      case 'serie': return 'Séries';
+      case 'film': return 'Films';
+      case 'manga': return 'Mangas';
+      default: return type.charAt(0).toUpperCase() + type.slice(1);
     }
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  if (loading) return <p className="media-loading">Chargement des médias…</p>;
 
-  if (loading) {
-    return <p>Chargement des médias...</p>;
-  }
-
-  // Filtrer les catégories pour n'inclure que celles ayant des médias correspondant au terme de recherche
-  const filteredCategories = Object.keys(medias).filter((type) => 
-    medias[type].some((media) =>
-      media.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+  const allTypes = Object.keys(medias);
+  const visibleTypes = (activeType === 'all' ? allTypes : [activeType]).filter((type) =>
+    medias[type] && medias[type].some((m) => m.title.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="media-page">
-      <h1>Liste des Médias</h1>
+      <header className="media-head">
+        <div>
+          <h1>Catalogue</h1>
+          <p>Parcourez l'ensemble des films, séries et mangas.</p>
+        </div>
+        <div className="media-search">
+          <span className="media-search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Rechercher un média par nom…"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      </header>
 
-      {/* Barre de recherche */}
-      <input 
-        type="text" 
-        placeholder="Rechercher un média par nom..." 
-        value={searchTerm} 
-        onChange={handleSearch} 
-        className="search-bar"
-      />
+      <div className="media-filters">
+        <button className={activeType === 'all' ? 'chip chip-on' : 'chip'} onClick={() => setActiveType('all')}>Tout</button>
+        {allTypes.map((type) => (
+          <button key={type} className={activeType === type ? 'chip chip-on' : 'chip'} onClick={() => setActiveType(type)}>
+            {formatType(type)}
+          </button>
+        ))}
+      </div>
 
-      {/* Affichage du message si aucun média ne correspond */}
-      {filteredCategories.length === 0 ? (
-        <p>Aucun média ne correspond à votre recherche.</p>
+      {visibleTypes.length === 0 ? (
+        <p className="media-empty">Aucun média ne correspond à votre recherche.</p>
       ) : (
-        filteredCategories.map((type) => (
-          <div key={type} className="media-section">
-            <h2>{formatType(type)}</h2>
-            <ul>
-              {medias[type]
-                .filter((media) => 
-                  media.title.toLowerCase().includes(searchTerm.toLowerCase()) // Filtre par terme de recherche
-                )
-                .map((media) => (
-                  <li key={media.id} className="media-item">
-                    <Link to={`/media/${media.id}`}>
-                      <img src={`/img/${media.imageUrl}`} alt={media.title} className="media-image" />
-                      <h3>{media.title}</h3>
-                    </Link>
-                  </li>
+        visibleTypes.map((type) => {
+          const items = medias[type].filter((m) => m.title.toLowerCase().includes(searchTerm.toLowerCase()));
+          return (
+            <section key={type} className="media-section">
+              <div className="media-section-head">
+                <h2>{formatType(type)}</h2>
+                <span className="media-count">{items.length}</span>
+              </div>
+              <div className="media-grid">
+                {items.map((media) => (
+                  <Link key={media.id} to={`/media/${media.id}`} className="media-card">
+                    <div className="media-thumb">
+                      <img src={`/img/${media.imageUrl}`} alt={media.title} />
+                      {media.score != null && <span className="media-score">★ {media.score}</span>}
+                    </div>
+                    <h3>{media.title}</h3>
+                    <span className="media-type">{formatType(media.type)}</span>
+                  </Link>
                 ))}
-            </ul>
-          </div>
-        ))
+              </div>
+            </section>
+          );
+        })
       )}
     </div>
   );

@@ -122,14 +122,12 @@ class ProfilController extends AbstractController
 
         $profil = $this->entityManager->getRepository(Profils::class)->findBy(['id_user' => $id]);
 
-        if (!$profil) {
-            return new JsonResponse(['error' => 'Profil non trouvé'], 404);
-        }
-
-        // il y a plusieurs lignes qui peuvent être récupérées
         $datas = [];
         foreach ($profil as $p) {
             $media = $this->entityManager->getRepository(Medias::class)->find($p->getIdMedia());
+            if (!$media) {
+                continue;
+            }
             $datas[] = [
                 'id_profil' => $p->getId(),
                 'id' => $media->getId(),

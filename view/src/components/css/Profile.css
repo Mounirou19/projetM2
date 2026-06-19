@@ -1,170 +1,105 @@
-/* ========================================
-   PROFILE PAGE - PROFIL UTILISATEUR
-   ======================================== */
+/* ========================================================
+   CinéManga — Profil utilisateur + favoris
+   ======================================================== */
+:root {
+  --cm-primary: #667eea;
+  --cm-primary-deep: #764ba2;
+  --cm-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --cm-ink: #1f2937;
+  --cm-muted: #6b7280;
+  --cm-border: #eef0f4;
+  --cm-poster: linear-gradient(160deg, #eef0fb, #dde1f4);
+}
+
+* { box-sizing: border-box; }
 
 .profile-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 48px;
-    background: white;
-    border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.6s ease-out;
-  }
-  
-  .profile-container h1 {
-    text-align: center;
-    font-size: 36px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 40px;
-  }
-  
-  .profile-info {
-    text-align: left;
-    margin-bottom: 32px;
-    padding: 32px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-    border-radius: 16px;
-  }
-  
-  .profile-info p {
-    font-size: 17px;
-    color: #374151;
-    margin: 16px 0;
-    display: flex;
-    align-items: center;
-  }
+  max-width: 1080px; margin: 0 auto; padding: 48px 40px 64px;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
 
-  .profile-info p strong {
-    color: #1f2937;
-    font-weight: 700;
-    min-width: 120px;
-  }
-  
-  .profile-actions {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    margin-top: 32px;
-    flex-wrap: wrap;
-  }
+/* ----- En-tête ----- */
+.profile-header {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  background: var(--cm-gradient); color: #fff;
+  border-radius: 20px; padding: 32px 34px;
+  box-shadow: 0 16px 40px rgba(102,126,234,0.28);
+  margin-bottom: 40px;
+}
+.profile-header::after {
+  content: ''; position: absolute; top: -50px; right: -30px;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 65%);
+}
+.profile-avatar {
+  position: relative; flex: none;
+  width: 84px; height: 84px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; font-weight: 800;
+}
+.profile-identity { position: relative; flex: 1; min-width: 200px; }
+.profile-identity h1 { margin: 0 0 4px; font-size: 28px; font-weight: 800; }
+.profile-email { margin: 0 0 10px; font-size: 14px; opacity: 0.9; }
+.profile-role {
+  display: inline-block; padding: 4px 12px; border-radius: 999px;
+  background: rgba(255,255,255,0.2); font-size: 12px; font-weight: 700;
+}
+.profile-actions { position: relative; display: flex; gap: 10px; flex-wrap: wrap; }
+.profile-btn-edit, .profile-btn-delete {
+  border: none; cursor: pointer; font-family: inherit;
+  padding: 11px 20px; border-radius: 11px; font-size: 13px; font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+.profile-btn-edit { background: #fff; color: var(--cm-primary-deep); }
+.profile-btn-edit:hover { transform: translateY(-1px); }
+.profile-btn-delete { background: rgba(255,255,255,0.16); color: #fff; border: 1.5px solid rgba(255,255,255,0.45); }
+.profile-btn-delete:hover:not(:disabled) { background: rgba(255,255,255,0.26); }
+.profile-btn-delete:disabled { opacity: 0.6; cursor: not-allowed; }
 
-  .profile-actions button {
-    padding: 14px 32px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-  }
-  
-  .profile-actions button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-  }
+/* ----- Favoris ----- */
+.favorites-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.favorites-head h2 { margin: 0; font-size: 22px; font-weight: 800; color: var(--cm-ink); }
+.favorites-count {
+  font-size: 12px; font-weight: 700; color: var(--cm-primary-deep);
+  background: #eef0f8; border-radius: 999px; padding: 2px 11px;
+}
+.favorites-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 22px;
+}
+.favorite-card { position: relative; }
+.favorite-link { text-decoration: none; display: block; transition: transform 0.25s ease; }
+.favorite-link:hover { transform: translateY(-6px); }
+.favorite-thumb {
+  height: 240px; border-radius: 14px; overflow: hidden;
+  background: var(--cm-poster); border: 1px solid #e3e6f5;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+}
+.favorite-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.favorite-card h3 { margin: 12px 0 0; font-size: 14px; font-weight: 700; color: var(--cm-ink); }
+.favorite-remove {
+  position: absolute; top: 10px; right: 10px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: none; cursor: pointer;
+  background: rgba(36,29,61,0.78); color: #fff; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px); transition: background 0.2s ease, transform 0.2s ease;
+}
+.favorite-remove:hover { background: #d14343; transform: scale(1.08); }
 
-  .profile-actions button:active {
-    transform: translateY(0);
-  }
-  
-  .favorites-section {
-    margin-top: 48px;
-    text-align: left;
-  }
-  
-  .favorites-section h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 24px;
-    padding-left: 16px;
-    border-left: 4px solid #667eea;
-  }
+.favorites-empty { text-align: center; padding: 50px 20px; color: var(--cm-muted); background: #fafafe; border: 1px dashed #d9dcea; border-radius: 16px; }
+.favorites-empty p { margin: 0 0 16px; font-size: 15px; }
+.favorites-cta {
+  display: inline-block; text-decoration: none;
+  background: var(--cm-gradient); color: #fff;
+  padding: 11px 22px; border-radius: 11px; font-size: 14px; font-weight: 700;
+}
 
-  .favorites-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .favorite-item {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    background: white;
-    border: 2px solid #e5e7eb;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    justify-content: space-between;
-    overflow: hidden;
-  }
-
-  .favorite-item:hover {
-    border-color: #667eea;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
-  }
-  
-  .favorite-item img {
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 16px;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .favorite-item:hover img {
-    transform: scale(1.15) rotate(3deg);
-  }
-  
-  .favorite-item h3 {
-    color: #1f2937;
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .profile-container {
-      margin: 20px 10px;
-      padding: 32px 20px;
-    }
-  
-    .profile-container h1 {
-      font-size: 28px;
-    }
-
-    .profile-info {
-      padding: 24px;
-    }
-
-    .profile-info p {
-      font-size: 15px;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .favorites-list {
-      grid-template-columns: 1fr;
-    }
-  }
+@media (max-width: 768px) {
+  .profile-container { padding: 32px 20px 48px; }
+  .profile-header { padding: 26px 22px; }
+  .profile-actions { width: 100%; }
+  .favorites-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+  .favorite-thumb { height: 190px; }
+}

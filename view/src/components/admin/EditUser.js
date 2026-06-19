@@ -19,7 +19,9 @@ const EditUser = () => {
     // Récupérer les données de l'utilisateur depuis l'API
     const fetchUser = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/${id}?infos=${infos}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/user/${id}?infos=${infos}`, {
+          headers: { 'Content-Type': 'application/json', 'X-ADMIN-TOKEN': `${process.env.REACT_APP_ADMIN_ACCESS_TOKEN}`, 'Authorization': `Bearer ${secureStorage.getJwtToken()}` },
+        });
         const data = await response.json();
         setFormData({
           lastname: data.lastname,
