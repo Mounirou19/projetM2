@@ -1,6 +1,6 @@
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
-// import '../css/RegisterForm.css';
+import './css/RegisterForm.css';
 
 /**
  * Composant RegisterForm - Formulaire d'inscription (présentation uniquement)
